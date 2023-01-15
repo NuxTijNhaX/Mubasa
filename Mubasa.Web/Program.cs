@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Mubasa.Web.Data;
+
 namespace Mubasa.Web
 {
     public class Program
@@ -8,6 +11,10 @@ namespace Mubasa.Web
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+            builder.Services.AddDbContext<ApplicationDbContext>(
+                options => options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("Default")));
 
             var app = builder.Build();
 
