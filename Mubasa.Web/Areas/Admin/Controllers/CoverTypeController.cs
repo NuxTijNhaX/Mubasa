@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
 
-namespace Mubasa.Web.Controllers
+namespace Mubasa.Web.Areas.Admin.Controllers
 {
     public class CoverTypeController : Controller
     {
@@ -35,7 +35,7 @@ namespace Mubasa.Web.Controllers
         {
             try
             {
-                if (!coverType.Name.All(Char.IsLetterOrDigit))
+                if (!coverType.Name.All(char.IsLetterOrDigit))
                 {
                     ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
                 }
@@ -81,7 +81,7 @@ namespace Mubasa.Web.Controllers
         {
             try
             {
-                if (!coverType.Name.All(Char.IsLetterOrDigit))
+                if (!coverType.Name.All(char.IsLetterOrDigit))
                 {
                     ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
                 }

@@ -2,7 +2,7 @@
 using Mubasa.Models;
 using System.Diagnostics;
 
-namespace Mubasa.Web.Controllers
+namespace Mubasa.Web.Areas.Customer.Controllers
 {
     public class HomeController : Controller
     {

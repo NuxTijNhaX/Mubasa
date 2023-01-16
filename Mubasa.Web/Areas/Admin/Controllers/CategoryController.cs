@@ -3,7 +3,7 @@ using Mubasa.DataAccess.Data;
 using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
 
-namespace Mubasa.Web.Controllers
+namespace Mubasa.Web.Areas.Admin.Controllers
 {
     public class CategoryController : Controller
     {
@@ -29,12 +29,12 @@ namespace Mubasa.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Category category)
         {
-            if(!category.Name.All(Char.IsLetterOrDigit)) 
+            if (!category.Name.All(char.IsLetterOrDigit))
             {
                 ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
             }
 
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _db.Category.Add(category);
                 _db.Save();
@@ -53,7 +53,7 @@ namespace Mubasa.Web.Controllers
 
             var category = _db.Category.GetFirstOrDefault(c => c.Id == id);
 
-            if(category == null)
+            if (category == null)
             {
                 return NotFound();
             }
@@ -63,9 +63,9 @@ namespace Mubasa.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Category category) 
+        public IActionResult Edit(Category category)
         {
-            if (!category.Name.All(Char.IsLetterOrDigit))
+            if (!category.Name.All(char.IsLetterOrDigit))
             {
                 ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
             }
@@ -102,7 +102,7 @@ namespace Mubasa.Web.Controllers
         public IActionResult DeletePost(int? id)
         {
             var category = _db.Category.GetFirstOrDefault(i => i.Id == id);
-            
+
             if (category == null)
             {
                 return NotFound();
@@ -110,7 +110,7 @@ namespace Mubasa.Web.Controllers
 
             _db.Category.Remove(category);
             _db.Save();
-          
+
             return RedirectToAction("Index");
         }
     }
