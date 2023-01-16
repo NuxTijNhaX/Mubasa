@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Mubasa.Web.Migrations
+namespace Mubasa.DataAccess.Migrations
 {
     public partial class AddCategory : Migration
     {

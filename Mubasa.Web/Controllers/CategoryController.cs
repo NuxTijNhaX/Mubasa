@@ -1,21 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Mubasa.Web.Data;
-using Mubasa.Web.Models;
+using Mubasa.DataAccess.Data;
+using Mubasa.DataAccess.Repository.IRepository;
+using Mubasa.Models;
 
 namespace Mubasa.Web.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _db;
 
-        public CategoryController(ApplicationDbContext db)
+        public CategoryController(IUnitOfWork db)
         {
             _db = db;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Category> categories = _db.Categories.ToList();
+            IEnumerable<Category> categories = _db.Category.GetAll();
             return View(categories);
         }
 
@@ -35,8 +36,8 @@ namespace Mubasa.Web.Controllers
 
             if(ModelState.IsValid)
             {
-                _db.Categories.Add(category);
-                _db.SaveChanges();
+                _db.Category.Add(category);
+                _db.Save();
                 return RedirectToAction("Index");
             }
 
@@ -50,7 +51,7 @@ namespace Mubasa.Web.Controllers
                 return NotFound();
             }
 
-            var category = _db.Categories.FirstOrDefault(i => i.Id == id);
+            var category = _db.Category.GetFirstOrDefault(c => c.Id == id);
 
             if(category == null)
             {
@@ -71,8 +72,8 @@ namespace Mubasa.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(category);
-                _db.SaveChanges();
+                _db.Category.Update(category);
+                _db.Save();
                 return RedirectToAction("Index");
             }
 
@@ -86,7 +87,7 @@ namespace Mubasa.Web.Controllers
                 return NotFound();
             }
 
-            var category = _db.Categories.FirstOrDefault(i => i.Id == id);
+            var category = _db.Category.GetFirstOrDefault(c => c.Id == id);
 
             if (category == null)
             {
@@ -100,15 +101,15 @@ namespace Mubasa.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var category = _db.Categories.FirstOrDefault(i => i.Id == id);
+            var category = _db.Category.GetFirstOrDefault(i => i.Id == id);
             
             if (category == null)
             {
                 return NotFound();
             }
 
-            _db.Categories.Remove(category);
-            _db.SaveChanges();
+            _db.Category.Remove(category);
+            _db.Save();
           
             return RedirectToAction("Index");
         }

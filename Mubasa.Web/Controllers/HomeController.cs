@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Mubasa.Web.Models;
+using Mubasa.Models;
 using System.Diagnostics;
 
 namespace Mubasa.Web.Controllers

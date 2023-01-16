@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Mubasa.Web.Data;
+using Mubasa.DataAccess.Data;
+using Mubasa.DataAccess.Repository;
+using Mubasa.DataAccess.Repository.IRepository;
 
 namespace Mubasa.Web
 {
@@ -15,6 +17,8 @@ namespace Mubasa.Web
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(
                     builder.Configuration.GetConnectionString("Default")));
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
 

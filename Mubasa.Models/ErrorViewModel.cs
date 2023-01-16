@@ -1,4 +1,4 @@
-namespace Mubasa.Web.Models
+namespace Mubasa.Models
 {
     public class ErrorViewModel
     {
