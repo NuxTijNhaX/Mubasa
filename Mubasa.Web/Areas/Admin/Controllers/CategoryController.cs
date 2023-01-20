@@ -5,6 +5,7 @@ using Mubasa.Models;
 
 namespace Mubasa.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _db;
