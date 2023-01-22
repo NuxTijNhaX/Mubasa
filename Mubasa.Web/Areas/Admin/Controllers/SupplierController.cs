@@ -1,19 +1,29 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mubasa.DataAccess.Repository.IRepository;
+using Mubasa.Models;
 
 namespace Mubasa.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class SupplierController : Controller
     {
-        // GET: SupplierController
-        public ActionResult Index()
+        private readonly IUnitOfWork _db;
+        public SupplierController(IUnitOfWork db)
         {
-            return View();
+            _db = db;
+        }
+
+        // GET: SupplierController
+        public IActionResult Index()
+        {
+            IEnumerable<Supplier> suppliers = _db.Supplier.GetAll();
+
+            return View(suppliers);
         }
 
         // GET: SupplierController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -21,11 +31,24 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         // POST: SupplierController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Create(Supplier supplier)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (!supplier.Name.All(char.IsLetterOrDigit))
+                {
+                    ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
+                }
+
+                if (ModelState.IsValid)
+                {
+                    _db.Supplier.Add(supplier);
+                    _db.Save();
+
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View();
             }
             catch
             {
@@ -34,19 +57,44 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         }
 
         // GET: SupplierController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var supplier = _db.Supplier.GetFirstOrDefault(c => c.Id == id);
+
+            if (supplier == null)
+            {
+                return NotFound();
+            }
+
+            return View(supplier);
         }
 
         // POST: SupplierController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Edit(Supplier supplier)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (!supplier.Name.All(char.IsLetterOrDigit))
+                {
+                    ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
+                }
+
+                if (ModelState.IsValid)
+                {
+                    _db.Supplier.Update(supplier);
+                    _db.Save();
+
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View();
             }
             catch
             {
@@ -55,18 +103,40 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         }
 
         // GET: SupplierController/Delete/5
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var supplier = _db.Supplier.GetFirstOrDefault(i => i.Id == id);
+
+            if (supplier == null)
+            {
+                return NotFound();
+            }
+
+            return View(supplier);
         }
 
         // POST: SupplierController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public IActionResult DeletePost(int id)
         {
             try
             {
+                var supplier = _db.Supplier.GetFirstOrDefault(i => i.Id == id);
+
+                if (supplier == null)
+                {
+                    return NotFound();
+                }
+
+                _db.Supplier.Remove(supplier);
+                _db.Save();
+
                 return RedirectToAction(nameof(Index));
             }
             catch

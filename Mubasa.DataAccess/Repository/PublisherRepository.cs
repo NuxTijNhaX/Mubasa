@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Mubasa.DataAccess.Repository
 {
-    public class CoverTypeRepository : Repository<CoverType>, ICoverTypeRepository
+    public class PublisherRepository : Repository<Publisher>, IPublisherRepository
     {
         private readonly ApplicationDbContext _db;
-        public CoverTypeRepository(ApplicationDbContext db) : base(db)
+        public PublisherRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
