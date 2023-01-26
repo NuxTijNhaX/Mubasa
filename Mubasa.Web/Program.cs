@@ -4,6 +4,7 @@ using Mubasa.DataAccess.Data;
 using Mubasa.DataAccess.Repository;
 using Mubasa.DataAccess.Repository.IRepository;
 using System.Globalization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Mubasa.Web
 {
@@ -40,6 +41,9 @@ namespace Mubasa.Web
                 options => options.UseSqlServer(
                     builder.Configuration.GetConnectionString("Default")));
 
+            builder.Services.AddDefaultIdentity<IdentityUser>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
@@ -55,13 +59,16 @@ namespace Mubasa.Web
             app.UseRequestLocalization();
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
 
-            
+            app.UseStaticFiles();
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
+
+            app.MapRazorPages();
 
             app.MapControllerRoute(
                 name: "default",
