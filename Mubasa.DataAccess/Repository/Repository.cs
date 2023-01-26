@@ -26,20 +26,36 @@ namespace Mubasa.DataAccess.Repository
             dbSet.Add(entity);
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(string? includeProps = null)
         {
             IQueryable<T> query = dbSet;
+
+            if(includeProps != null)
+            {
+                foreach (var prop in includeProps.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query.Include(prop);
+                }
+            }
 
             return query.ToList();
         }
 
-        public T GetFirstOrDefault(Expression<Func<T, bool>> filter)
+        public T GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProps = null)
         {
             IQueryable<T> query = dbSet;
 
-            IEnumerable<T> entity = query.Where(filter);
+            query = query.Where(filter);
 
-            return entity.FirstOrDefault();
+            if (includeProps != null)
+            {
+                foreach (var prop in includeProps.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query.Include(prop);
+                }
+            }
+
+            return query.FirstOrDefault();
         }
 
         public void Update(T entity)

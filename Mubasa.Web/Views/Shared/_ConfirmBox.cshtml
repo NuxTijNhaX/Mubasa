@@ -1,0 +1,8 @@
+﻿<script src="~/lib/notiflix/dist/notiflix-confirm-aio-3.2.6.min.js"></script>
+
+@if (TempData["success"] != null)
+{
+        <script>
+            Notiflix.Notify.success('@TempData["success"]');
+        </script>
+}

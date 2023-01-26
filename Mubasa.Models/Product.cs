@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -23,21 +24,27 @@ namespace Mubasa.Models
         public double Price { get; set; }
 
         [Required]
+        [ValidateNever]
         public string ImgUrl { get; set; } = string.Empty;
 
         public int CategoryId { get; set; }
+        [ValidateNever]
         public Category Category { get; set; }
 
         public int CoverTypeId { get; set; }
+        [ValidateNever] 
         public CoverType CoverType { get; set; }
 
         public int AuthorId { get; set; }
+        [ValidateNever] 
         public Author Author { get; set; }
 
         public int PublisherId { get; set; }
+        [ValidateNever] 
         public Publisher Publisher { get; set; }
 
         public int SupplierId { get; set; }
+        [ValidateNever]
         public Supplier Supplier { get; set; }
     }
 }

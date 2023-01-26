@@ -9,8 +9,8 @@
 <h4>Product</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="">
+        <form method="post" asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Product.Name" class="control-label"></label>
@@ -19,7 +19,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Product.Description" class="control-label"></label>
-                <input asp-for="Product.Description" class="form-control" />
+                <textarea asp-for="Product.Description" class="form-control"></textarea>
                 <span asp-validation-for="Product.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -34,7 +34,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Product.ImgUrl" class="control-label"></label>
-                <input asp-for="Product.ImgUrl" class="form-control" />
+                <input type="file" name="file" asp-for="Product.ImgUrl" class="form-control" />
                 <span asp-validation-for="Product.ImgUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -53,23 +53,32 @@
             </div>
             <div class="form-group">
                 <label asp-for="Product.AuthorId" class="control-label"></label>
-                <input asp-for="Product.AuthorId" class="form-control" />
+                <select asp-for="Product.AuthorId" asp-items="@Model.AuthorList" class="form-select">
+                    <option disabled selected>--- Select ---</option>
+                </select>
                 <span asp-validation-for="Product.AuthorId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Product.PublisherId" class="control-label"></label>
-                <input asp-for="Product.PublisherId" class="form-control" />
+                <select asp-for="Product.PublisherId" asp-items="@Model.PublisherList" class="form-select">
+                    <option disabled selected>--- Select ---</option>
+                </select>
                 <span asp-validation-for="Product.PublisherId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Product.SupplierId" class="control-label"></label>
-                <input asp-for="Product.SupplierId" class="form-control" />
+                <select asp-for="Product.SupplierId" asp-items="@Model.SupplierList" class="form-select">
+                    <option disabled selected>--- Select ---</option>
+                </select>
                 <span asp-validation-for="Product.SupplierId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
+
+
+
     </div>
 </div>
 
@@ -79,4 +88,11 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        tinymce.init({
+              selector: 'textarea',
+              menubar: ''
+        });
+  </script>
 }

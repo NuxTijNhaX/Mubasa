@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Mubasa.DataAccess.Data;
 using Mubasa.DataAccess.Repository;
 using Mubasa.DataAccess.Repository.IRepository;
+using System.Globalization;
 
 namespace Mubasa.Web
 {
@@ -12,7 +14,27 @@ namespace Mubasa.Web
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddLocalization(options =>
+            {
+                options.ResourcesPath = "Resources";
+            });
+
+            builder.Services.AddControllersWithViews().AddViewLocalization();
+
+            builder.Services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture("vi-VN");
+
+                var cultures = new CultureInfo[]
+                {
+                    new CultureInfo("vi-VN"),
+                    new CultureInfo("en-US"),
+                };
+
+                options.SupportedCultures = cultures;
+                options.SupportedUICultures= cultures;
+            });
+
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(
@@ -30,8 +52,12 @@ namespace Mubasa.Web
                 app.UseHsts();
             }
 
+            app.UseRequestLocalization();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            
 
             app.UseRouting();
 

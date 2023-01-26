@@ -45,6 +45,8 @@ namespace Mubasa.Web.Areas.Admin.Controllers
                     _db.Author.Add(author);
                     _db.Save();
 
+                    TempData["success"] = "Tao Thanh Cong";
+
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -102,28 +104,9 @@ namespace Mubasa.Web.Areas.Admin.Controllers
             }
         }
 
-        // GET: AuthorController/Delete/5
-        public IActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var author = _db.Author.GetFirstOrDefault(i => i.Id == id);
-
-            if (author == null)
-            {
-                return NotFound();
-            }
-
-            return View(author);
-        }
-
         // POST: AuthorController/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeletePost(int id)
+        [HttpDelete]
+        public IActionResult Delete(int id)
         {
             try
             {
@@ -131,17 +114,17 @@ namespace Mubasa.Web.Areas.Admin.Controllers
 
                 if (author == null)
                 {
-                    return NotFound();
+                    return Json(new { success = false, message = "Not Found" });
                 }
 
                 _db.Author.Remove(author);
                 _db.Save();
 
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "Delete Successful" });
             }
             catch
             {
-                return View();
+                return Json(new { success = false, message = "Error Deleting Data" });
             }
         }
     }

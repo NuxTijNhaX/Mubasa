@@ -12,9 +12,12 @@ namespace Mubasa.Web.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _db;
-        public ProductController(IUnitOfWork db)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public ProductController(IUnitOfWork db, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: ProductController
@@ -31,6 +34,12 @@ namespace Mubasa.Web.Areas.Admin.Controllers
             ProductVM productVM = new ProductVM()
             {
                 Product = new Product(),
+                AuthorList = _db.Author.GetAll().Select(
+                    i => new SelectListItem
+                    {
+                        Value = i.Id.ToString(),
+                        Text = i.Name,
+                    }),
                 CategoryList = _db.Category.GetAll().Select(
                     i => new SelectListItem
                     {
@@ -38,6 +47,18 @@ namespace Mubasa.Web.Areas.Admin.Controllers
                         Text = i.Name,
                     }),
                 CoverTypeList = _db.CoverType.GetAll().Select(
+                    i => new SelectListItem
+                    {
+                        Value = i.Id.ToString(),
+                        Text = i.Name,
+                    }),
+                PublisherList = _db.Publisher.GetAll().Select(
+                    i => new SelectListItem
+                    {
+                        Value = i.Id.ToString(),
+                        Text = i.Name,
+                    }),
+                SupplierList = _db.Supplier.GetAll().Select(
                     i => new SelectListItem
                     {
                         Value = i.Id.ToString(),
@@ -51,18 +72,29 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         // POST: ProductController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Product product)
+        public IActionResult Create(ProductVM productVM, IFormFile? file)
         {
             try
             {
-                //if (!product.Name.All(char.IsLetterOrDigit))
-                //{
-                //    ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
-                //}
-
                 if (ModelState.IsValid)
                 {
-                    _db.Product.Add(product);
+                    if(file != null)
+                    {
+                        string rootPath = _webHostEnvironment.WebRootPath;
+                        string newFileName = file.FileName + Guid.NewGuid().ToString();
+                        string storedFolderPath = Path.Combine(rootPath, @"images\product");
+                        string completeFileName = newFileName + Path.GetExtension(file.FileName);
+
+                        string completeFilePath = Path.Combine(storedFolderPath, completeFileName);
+                        using (var fileStream = new FileStream(completeFilePath, FileMode.Create))
+                        {
+                            file.CopyTo(fileStream);
+                        }
+
+                        productVM.Product.ImgUrl = @"images\product" + completeFileName;
+                    }
+
+                    _db.Product.Add(productVM.Product);
                     _db.Save();
 
                     return RedirectToAction(nameof(Index));
