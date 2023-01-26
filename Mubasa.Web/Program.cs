@@ -5,6 +5,8 @@ using Mubasa.DataAccess.Repository;
 using Mubasa.DataAccess.Repository.IRepository;
 using System.Globalization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Mubasa.Utility;
 
 namespace Mubasa.Web
 {
@@ -41,9 +43,11 @@ namespace Mubasa.Web
                 options => options.UseSqlServer(
                     builder.Configuration.GetConnectionString("Default")));
 
-            builder.Services.AddDefaultIdentity<IdentityUser>()
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+
+            builder.Services.AddSingleton<IEmailSender, EmailSender>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
