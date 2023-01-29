@@ -16,3 +16,38 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.search-bar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.text-area {
+    border: 2px solid black;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.search-bar input {
+    width: 100%;
+    border: none;
+    outline: none;
+}
+
+.text-area button {
+    border: none;
+    outline: none;
+    background: none;
+    border-radius: 50%;
+}
+
+#btn-submit-txt {
+    border: 2px solid black;
+    border-left: none;
+    outline: none;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
