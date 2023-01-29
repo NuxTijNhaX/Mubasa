@@ -133,6 +133,9 @@
     <value>Không</value>
     <comment>`</comment>
   </data>
+  <data name="Search books, authors, ISBNs" xml:space="preserve">
+    <value>Tìm kiếm sách, tác giả,.... mà bạn mong muốn</value>
+  </data>
   <data name="Yes" xml:space="preserve">
     <value>Có</value>
   </data>

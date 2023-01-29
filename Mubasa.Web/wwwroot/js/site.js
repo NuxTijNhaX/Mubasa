@@ -38,3 +38,14 @@ async function yesCb(id, path) {
             }
         });
 }
+
+function clearText() {
+    const element = document.getElementById("input-search");
+    element.value = "";
+    element.focus();
+}
+
+window.onload = function () {
+    const clearBtn = document.getElementById("btn-delete-txt");
+    clearBtn.addEventListener("click", clearText);
+}

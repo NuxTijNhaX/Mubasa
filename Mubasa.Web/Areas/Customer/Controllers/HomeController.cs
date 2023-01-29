@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Localization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace Mubasa.Web.Areas.Customer.Controllers
 {
@@ -9,10 +12,12 @@ namespace Mubasa.Web.Areas.Customer.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUnitOfWork _db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork db)
         {
             _logger = logger;
+            _db = db;
         }
 
         public IActionResult Index()
@@ -20,9 +25,43 @@ namespace Mubasa.Web.Areas.Customer.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Details(int productId)
         {
-            return View();
+            var product = _db.Product.GetFirstOrDefault(x => x.Id == productId);
+
+            var shoppingCart = new ShoppingCart()
+            {
+                Count = 1,
+                ProductId = productId,
+                Product = product,
+            };
+
+            return View(shoppingCart);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult Details(ShoppingCart shoppingCart)
+        {
+            ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            shoppingCart.ApplicationUserId = claim.Value;
+
+            var shoppingCartDb = _db.ShoppingCart.GetFirstOrDefault(x => x.ApplicationUserId == shoppingCart.ApplicationUserId && x.ProductId == shoppingCart.ProductId);
+            
+            if (shoppingCartDb != null)
+            {
+                shoppingCartDb.Count += shoppingCart.Count;
+                _db.ShoppingCart.Update(shoppingCartDb);
+            } else
+            {
+                _db.ShoppingCart.Add(shoppingCart);
+            }
+            
+            _db.Save();
+
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

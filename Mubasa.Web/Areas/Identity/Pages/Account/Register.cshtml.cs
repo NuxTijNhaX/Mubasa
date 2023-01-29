@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Mubasa.Models;
 using Mubasa.Utility;
 
 namespace Mubasa.Web.Areas.Identity.Pages.Account
@@ -101,12 +102,18 @@ namespace Mubasa.Web.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            public string Name { get; set; }
+            public string Region { get; set; }
+            public string District { get; set; }
+            public string Ward { get; set; }
+            public string Address { get; set; }
         }
 
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if(_roleManager.RoleExistsAsync(SD.Role_Admin).GetAwaiter().GetResult())
+            if(!_roleManager.RoleExistsAsync(SD.Role_Admin).GetAwaiter().GetResult())
             {
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Employee)).GetAwaiter().GetResult();
@@ -166,11 +173,11 @@ namespace Mubasa.Web.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private ApplicationUser CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<ApplicationUser>();
             }
             catch
             {

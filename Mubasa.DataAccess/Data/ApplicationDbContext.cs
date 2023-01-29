@@ -17,6 +17,7 @@ namespace Mubasa.DataAccess.Data
         public DbSet<CoverType> CoverTypes { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model Mubasa.Models.Product
+﻿@model Mubasa.Models.ShoppingCart
 
 @{
     ViewData["Title"] = "Details";
@@ -11,74 +11,79 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
+            @Html.DisplayNameFor(model => model.Product.Id)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
+            @Html.DisplayFor(model => model.Product.Id)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Product.Name)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Product.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Product.Description)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.Product.Description)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ISBN)
+            @Html.DisplayNameFor(model => model.Product.ISBN)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ISBN)
+            @Html.DisplayFor(model => model.Product.ISBN)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
+            @Html.DisplayNameFor(model => model.Product.Price)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
+            @Html.DisplayFor(model => model.Product.Price)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImgUrl)
+            @Html.DisplayNameFor(model => model.Product.ImgUrl)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImgUrl)
+            @Html.DisplayFor(model => model.Product.ImgUrl)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CategoryId)
+            @Html.DisplayNameFor(model => model.Product.CategoryId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CategoryId)
+            @Html.DisplayFor(model => model.Product.CategoryId)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CoverTypeId)
+            @Html.DisplayNameFor(model => model.Product.CoverTypeId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CoverTypeId)
+            @Html.DisplayFor(model => model.Product.CoverTypeId)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AuthorId)
+            @Html.DisplayNameFor(model => model.Product.AuthorId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AuthorId)
+            @Html.DisplayFor(model => model.Product.AuthorId)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PublisherId)
+            @Html.DisplayNameFor(model => model.Product.PublisherId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PublisherId)
+            @Html.DisplayFor(model => model.Product.PublisherId)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SupplierId)
+            @Html.DisplayNameFor(model => model.Product.SupplierId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SupplierId)
+            @Html.DisplayFor(model => model.Product.SupplierId)
         </dd>
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <form method="post">
+        <input type="number" asp-for="@Model.Count" />
+        <input hidden asp-for="@Model.ProductId" />
+        <button type="submit">Add to Cart</button>
+    </form>
+    
     <a asp-action="Index">Back to List</a>
 </div>
