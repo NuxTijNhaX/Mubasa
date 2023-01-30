@@ -117,24 +117,69 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Author" xml:space="preserve">
+    <value>Tác giả</value>
+  </data>
+  <data name="Back to List" xml:space="preserve">
+    <value>Trở lại</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Hủy</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Danh Mục</value>
+  </data>
+  <data name="Confirm Deleting Data" xml:space="preserve">
+    <value>Xác Nhận Xóa Dữ Liệu</value>
+  </data>
+  <data name="CoverType" xml:space="preserve">
+    <value>Hình Thức Bìa</value>
   </data>
   <data name="Create New" xml:space="preserve">
     <value>Tạo Mới</value>
   </data>
+  <data name="Create Successful" xml:space="preserve">
+    <value>Tạo Mới Thành Công</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Xóa</value>
   </data>
+  <data name="Delete Successful" xml:space="preserve">
+    <value>Xóa Thành Công</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Chỉnh Sửa</value>
+  </data>
+  <data name="Error Deleting Data" xml:space="preserve">
+    <value>Đã Có Lỗi Khi Xóa Dữ Liệu</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Tên</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>Không</value>
     <comment>`</comment>
   </data>
+  <data name="Not Found" xml:space="preserve">
+    <value>Không Tìm Thấy</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Sản Phẩm</value>
+  </data>
+  <data name="Publisher" xml:space="preserve">
+    <value>Nhà Xuất Bản</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Lưu lại</value>
+  </data>
   <data name="Search books, authors, ISBNs" xml:space="preserve">
     <value>Tìm kiếm sách, tác giả,.... mà bạn mong muốn</value>
+  </data>
+  <data name="Special Charactors" xml:space="preserve">
+    <value>Vui lòng không sử dụng ký tự đặc biệt</value>
+  </data>
+  <data name="Supplier" xml:space="preserve">
+    <value>Nhà Cung Cấp</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Có</value>

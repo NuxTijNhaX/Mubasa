@@ -120,35 +120,11 @@
   <data name="Author" xml:space="preserve">
     <value>Author</value>
   </data>
-  <data name="Back to List" xml:space="preserve">
-    <value>Back to List</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="Category" xml:space="preserve">
-    <value>Category</value>
-  </data>
   <data name="Confirm Deleting Data" xml:space="preserve">
     <value>Confirm Deleting Data</value>
   </data>
-  <data name="CoverType" xml:space="preserve">
-    <value>Cover Type</value>
-  </data>
-  <data name="Create New" xml:space="preserve">
-    <value>Create New</value>
-  </data>
-  <data name="Create Successful" xml:space="preserve">
-    <value>Create Successful</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
-  </data>
   <data name="Delete Successful" xml:space="preserve">
     <value>Delete Successful</value>
-  </data>
-  <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
   </data>
   <data name="Error Deleting Data" xml:space="preserve">
     <value>Error Deleting Data</value>
@@ -156,31 +132,7 @@
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="No" xml:space="preserve">
-    <value>No</value>
-  </data>
   <data name="Not Found" xml:space="preserve">
     <value>Not Found</value>
-  </data>
-  <data name="Product" xml:space="preserve">
-    <value>Product</value>
-  </data>
-  <data name="Publisher" xml:space="preserve">
-    <value>Publisher</value>
-  </data>
-  <data name="Save" xml:space="preserve">
-    <value>Save</value>
-  </data>
-  <data name="Search books, authors, ISBNs" xml:space="preserve">
-    <value>Search books, authors, ISBNs</value>
-  </data>
-  <data name="Special Charactors" xml:space="preserve">
-    <value>Please do not use special charactors</value>
-  </data>
-  <data name="Supplier" xml:space="preserve">
-    <value>Supplier</value>
-  </data>
-  <data name="Yes" xml:space="preserve">
-    <value>Yes</value>
   </data>
 </root>
