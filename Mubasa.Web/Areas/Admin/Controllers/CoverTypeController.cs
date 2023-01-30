@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
+using Mubasa.Web.Areas.Customer.Controllers;
+using Mubasa.Utility;
 
 namespace Mubasa.Web.Areas.Admin.Controllers
 {
@@ -9,10 +12,11 @@ namespace Mubasa.Web.Areas.Admin.Controllers
     public class CoverTypeController : Controller
     {
         private readonly IUnitOfWork _db;
-
-        public CoverTypeController(IUnitOfWork db)
+        private readonly IStringLocalizer<HomeController> _localizer;
+        public CoverTypeController(IUnitOfWork db, IStringLocalizer<HomeController> localizer)
         {
             _db = db;
+            _localizer = localizer;
         }
 
         // GET: CoverTypeController
@@ -36,9 +40,9 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         {
             try
             {
-                if (!coverType.Name.All(char.IsLetterOrDigit))
+                if (coverType.Name.All((ch) => Extensions.IsInvalidCharactor(ch)))
                 {
-                    ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
+                    ModelState.AddModelError("Name", $"{_localizer["Special Charactors"]}");
                 }
 
                 if (ModelState.IsValid)
@@ -82,9 +86,9 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         {
             try
             {
-                if (!coverType.Name.All(char.IsLetterOrDigit))
+                if (coverType.Name.All((ch) => Extensions.IsInvalidCharactor(ch)))
                 {
-                    ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
+                    ModelState.AddModelError("Name", $"{_localizer["Special Charactors"]}");
                 }
 
                 if (ModelState.IsValid)
@@ -103,46 +107,27 @@ namespace Mubasa.Web.Areas.Admin.Controllers
             }
         }
 
-        // GET: CoverTypeController/Delete/5
-        public IActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var coverType = _db.CoverType.GetFirstOrDefault(i => i.Id == id);
-
-            if (coverType == null)
-            {
-                return NotFound();
-            }
-
-            return View(coverType);
-        }
-
         // POST: CoverTypeController/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeletePost(int id)
+        [HttpDelete]
+        public IActionResult Delete(int id)
         {
             try
             {
-                var coverType = _db.CoverType.GetFirstOrDefault(i => i.Id == id);
+                var author = _db.CoverType.GetFirstOrDefault(i => i.Id == id);
 
-                if (coverType == null)
+                if (author == null)
                 {
-                    return NotFound();
+                    return Json(new { success = false, message = $"{_localizer["Not Found"]}" });
                 }
 
-                _db.CoverType.Remove(coverType);
+                _db.CoverType.Remove(author);
                 _db.Save();
 
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = $"{_localizer["Delete Successful"]}" });
             }
             catch
             {
-                return View();
+                return Json(new { success = false, message = $"{_localizer["Error Deleting Data"]}" });
             }
         }
     }

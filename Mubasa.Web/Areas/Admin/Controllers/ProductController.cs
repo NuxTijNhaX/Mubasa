@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
 using Mubasa.Models.ViewModels;
+using Mubasa.Utility;
 using System.Collections.Generic;
 
 namespace Mubasa.Web.Areas.Admin.Controllers
@@ -133,7 +134,7 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         {
             try
             {
-                if (!product.Name.All(char.IsLetterOrDigit))
+                if (product.Name.All((ch) => Extensions.IsInvalidCharactor(ch)))
                 {
                     ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
                 }
