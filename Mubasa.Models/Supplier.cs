@@ -10,7 +10,5 @@ namespace Mubasa.Models
         [DisplayName("Tên")]
         [Required(ErrorMessage = "Vui lòng không để trống.")]
         public string Name { get; set; } = string.Empty;
-
-        public string Description { get; set; } = string.Empty;
     }
 }
