@@ -13,5 +13,10 @@ namespace Mubasa.Utility
         {
             return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(title.ToLower());
         }
+
+        public static bool IsInvalidCharactor(char ch)
+        {
+            return !(char.IsLetterOrDigit(ch) || char.IsWhiteSpace(ch));
+        }
     }
 }

@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
+using Mubasa.Utility;
+using Mubasa.Web.Areas.Customer.Controllers;
 
 namespace Mubasa.Web.Areas.Admin.Controllers
 {
@@ -9,9 +12,11 @@ namespace Mubasa.Web.Areas.Admin.Controllers
     public class PublisherController : Controller
     {
         private readonly IUnitOfWork _db;
-        public PublisherController(IUnitOfWork db)
+        private readonly IStringLocalizer<HomeController> _localizer;
+        public PublisherController(IUnitOfWork db, IStringLocalizer<HomeController> localizer)
         {
             _db = db;
+            _localizer = localizer;
         }
 
         // GET: PublisherController
@@ -35,15 +40,17 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         {
             try
             {
-                if (!publisher.Name.All(char.IsLetterOrDigit))
+                if (publisher.Name.All((ch) => Extensions.IsInvalidCharactor(ch)))
                 {
-                    ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
+                    ModelState.AddModelError("Name", $"{_localizer["Special Charactors"]}");
                 }
 
                 if (ModelState.IsValid)
                 {
                     _db.Publisher.Add(publisher);
                     _db.Save();
+
+                    TempData["success"] = $"{_localizer["Create Successful"]}";
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -81,9 +88,9 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         {
             try
             {
-                if (!publisher.Name.All(char.IsLetterOrDigit))
+                if (publisher.Name.All((ch) => Extensions.IsInvalidCharactor(ch)))
                 {
-                    ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
+                    ModelState.AddModelError("Name", $"{_localizer["Special Charactors"]}");
                 }
 
                 if (ModelState.IsValid)
@@ -102,28 +109,9 @@ namespace Mubasa.Web.Areas.Admin.Controllers
             }
         }
 
-        // GET: PublisherController/Delete/5
-        public IActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var publisher = _db.Publisher.GetFirstOrDefault(i => i.Id == id);
-
-            if (publisher == null)
-            {
-                return NotFound();
-            }
-
-            return View(publisher);
-        }
-
         // POST: PublisherController/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeletePost(int id)
+        [HttpDelete]
+        public IActionResult Delete(int id)
         {
             try
             {
@@ -131,17 +119,17 @@ namespace Mubasa.Web.Areas.Admin.Controllers
 
                 if (publisher == null)
                 {
-                    return NotFound();
+                    return Json(new { success = false, message = $"{_localizer["Not Found"]}" });
                 }
 
                 _db.Publisher.Remove(publisher);
                 _db.Save();
 
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = $"{_localizer["Delete Successful"]}" });
             }
             catch
             {
-                return View();
+                return Json(new { success = false, message = $"{_localizer["Error Deleting Data"]}" });
             }
         }
     }

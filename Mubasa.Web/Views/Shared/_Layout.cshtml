@@ -106,13 +106,13 @@
                 <div class="col-4">
                     <ul class="navbar-nav d-flex justify-content-evenly">
                         <li class="nav-item">
-                            <a class="nav-link text-dark position-relative">
+                            <a class="nav-link text-dark position-relative" asp-area="Customer" asp-controller="ShoppingCart" asp-action="Index">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-cart3" viewBox="0 0 16 16">
                                     <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
                                 </svg>
                                 <span class="position-absolute top-10 start-90 translate-middle badge rounded-pill bg-danger">
                                     0
-                                    <span class="visually-hidden">unread messages</span>
+                                    @*<span class="visually-hidden">unread messages</span>*@
                                 </span>
                             </a>
                         </li>
@@ -145,12 +145,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.tiny.cloud/1/zbt9kg8y557b6mewsiter99glo181qaunrrponnvj74mpv60/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-
-@*    @if(TempData.Count != 0)
-    {*@
-        <partial name="_NotificationAlert" />
-
-
+    <partial name="_NotificationAlert" />
     <partial name="_ConfirmBox" />
 
     @await RenderSectionAsync("Scripts", required: false)

@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Mubasa.DataAccess.Data;
 using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
+using Mubasa.Utility;
+using Mubasa.Web.Areas.Customer.Controllers;
 
 namespace Mubasa.Web.Areas.Admin.Controllers
 {
@@ -9,10 +12,12 @@ namespace Mubasa.Web.Areas.Admin.Controllers
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _db;
+        private readonly IStringLocalizer<HomeController> _localizer;
 
-        public CategoryController(IUnitOfWork db)
+        public CategoryController(IUnitOfWork db, IStringLocalizer<HomeController> localizer)
         {
             _db = db;
+            _localizer = localizer;
         }
 
         public IActionResult Index()
@@ -30,9 +35,9 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Category category)
         {
-            if (!category.Name.All(char.IsLetterOrDigit))
+            if (category.Name.All((ch) => Extensions.IsInvalidCharactor(ch)))
             {
-                ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
+                ModelState.AddModelError("Name", $"{_localizer["Special Charactors"]}");
             }
 
             if (ModelState.IsValid)
@@ -66,9 +71,9 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Category category)
         {
-            if (!category.Name.All(char.IsLetterOrDigit))
+            if (category.Name.All((ch) => Extensions.IsInvalidCharactor(ch)))
             {
-                ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
+                ModelState.AddModelError("Name", $"{_localizer["Special Charactors"]}");
             }
 
             if (ModelState.IsValid)
@@ -81,38 +86,28 @@ namespace Mubasa.Web.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult Delete(int? id)
+        // POST: CategoryController/Delete/5
+        [HttpDelete]
+        public IActionResult Delete(int id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
+                var author = _db.Category.GetFirstOrDefault(i => i.Id == id);
+
+                if (author == null)
+                {
+                    return Json(new { success = false, message = $"{_localizer["Not Found"]}" });
+                }
+
+                _db.Category.Remove(author);
+                _db.Save();
+
+                return Json(new { success = true, message = $"{_localizer["Delete Successful"]}" });
             }
-
-            var category = _db.Category.GetFirstOrDefault(c => c.Id == id);
-
-            if (category == null)
+            catch
             {
-                return NotFound();
+                return Json(new { success = false, message = $"{_localizer["Error Deleting Data"]}" });
             }
-
-            return View(category);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeletePost(int? id)
-        {
-            var category = _db.Category.GetFirstOrDefault(i => i.Id == id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            _db.Category.Remove(category);
-            _db.Save();
-
-            return RedirectToAction("Index");
         }
     }
 }

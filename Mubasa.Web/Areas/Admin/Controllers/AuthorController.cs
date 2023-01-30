@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
+using Mubasa.Utility;
+using Mubasa.Web.Areas.Customer.Controllers;
 
 namespace Mubasa.Web.Areas.Admin.Controllers
 {
@@ -9,9 +12,11 @@ namespace Mubasa.Web.Areas.Admin.Controllers
     public class AuthorController : Controller
     {
         private readonly IUnitOfWork _db;
-        public AuthorController(IUnitOfWork db)
+        private readonly IStringLocalizer<HomeController> _localizer;
+        public AuthorController(IUnitOfWork db, IStringLocalizer<HomeController> localizer)
         {
             _db = db;
+            _localizer = localizer;
         }
 
         // GET: AuthorController
@@ -35,9 +40,9 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         {
             try
             {
-                if (!author.Name.All(char.IsLetterOrDigit))
+                if (author.Name.All((ch) => Extensions.IsInvalidCharactor(ch)))
                 {
-                    ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
+                    ModelState.AddModelError("Name", $"{_localizer["Special Charactors"]}");
                 }
 
                 if (ModelState.IsValid)
@@ -45,7 +50,7 @@ namespace Mubasa.Web.Areas.Admin.Controllers
                     _db.Author.Add(author);
                     _db.Save();
 
-                    TempData["success"] = "Tao Thanh Cong";
+                    TempData["success"] = $"{_localizer["Create Successful"]}";
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -83,9 +88,9 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         {
             try
             {
-                if (!author.Name.All(char.IsLetterOrDigit))
+                if (author.Name.All((ch) => Extensions.IsInvalidCharactor(ch)))
                 {
-                    ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
+                    ModelState.AddModelError("Name", $"{_localizer["Special Charactors"]}");
                 }
 
                 if (ModelState.IsValid)
@@ -114,17 +119,17 @@ namespace Mubasa.Web.Areas.Admin.Controllers
 
                 if (author == null)
                 {
-                    return Json(new { success = false, message = "Not Found" });
+                    return Json(new { success = false, message = $"{_localizer["Not Found"]}" });
                 }
 
                 _db.Author.Remove(author);
                 _db.Save();
 
-                return Json(new { success = true, message = "Delete Successful" });
+                return Json(new { success = true, message = $"{_localizer["Delete Successful"]}" });
             }
             catch
             {
-                return Json(new { success = false, message = "Error Deleting Data" });
+                return Json(new { success = false, message = $"{_localizer["Error Deleting Data"]}" });
             }
         }
     }
