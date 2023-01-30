@@ -32,7 +32,9 @@ async function yesCb(id, path) {
         .then(data => {
             if (data.success) {
                 Notiflix.Notify.success(data.message);
-                window.location.reload();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500)
             } else {
                 Notiflix.Notify.failure(data.message);
             }
