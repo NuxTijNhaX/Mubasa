@@ -34,7 +34,7 @@ namespace Mubasa.DataAccess.Repository
             {
                 foreach (var prop in includeProps.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query.Include(prop);
+                    query = query.Include(prop);
                 }
             }
 
@@ -51,7 +51,7 @@ namespace Mubasa.DataAccess.Repository
             {
                 foreach (var prop in includeProps.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query.Include(prop);
+                    query = query.Include(prop);
                 }
             }
 

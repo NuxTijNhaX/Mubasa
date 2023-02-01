@@ -27,7 +27,7 @@ namespace Mubasa.Web.Areas.Customer.Controllers
 
         public IActionResult Details(int productId)
         {
-            var product = _db.Product.GetFirstOrDefault(x => x.Id == productId);
+            var product = _db.Product.GetFirstOrDefault(x => x.Id == productId, includeProp: "Category,CoverType,Author,Publisher,Supplier");
 
             var shoppingCart = new ShoppingCart()
             {
