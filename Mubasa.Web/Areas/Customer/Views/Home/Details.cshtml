@@ -1,89 +1,99 @@
-﻿@model Mubasa.Models.ShoppingCart
+﻿@using Microsoft.Extensions.Localization;
+@using Mubasa.Web.Areas.Customer.Controllers;
+@using System.Globalization;
+@inject IStringLocalizer<HomeController> homeLocalizer;
+
+@model Mubasa.Models.ShoppingCart
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = @Model.Product.Name;
 }
 
-<h1>Details</h1>
+<div class="row border px-3 py-4 pb-5 rounded-3 bg-light shadow">
+    <div class="row col-5">
+        <div class="col-2">
+            <a>
+                <img class="w-100" src="@Model.Product.ImgUrl" alt="@Model.Product.Name" />
+            </a>
+        </div>
+        <div class="col-10">
+            <img class="w-100" src="@Model.Product.ImgUrl" alt="@Model.Product.Name" />
+        </div>
+    </div>
+    <div class="col-7 px-5">
+        <div class="product-essential-detail">
+            <div class="product-title">
+                <h1 class="fs-2">
+                    @Model.Product.Name
+                </h1>
+            </div>
+            <div class="product-basicinfo d-flex justify-content-between">
+                <div>
+                    <p>@homeLocalizer["Supplier"]: <span class="fw-bold">@Model.Product.Supplier.Name</span></p>
+                    <p>@homeLocalizer["Publisher"]: <span class="fw-bold">@Model.Product.Publisher.Name</span></p>
+                </div>
+                <div>
+                    <p>@homeLocalizer["Author"]: <span class="fw-bold">@Model.Product.Author.Name</span></p>
+                    <p>@homeLocalizer["CoverType"]: <span class="fw-bold">@Model.Product.CoverType.Name</span></p>
+                </div>
+            </div>
+            <div>
+                <p class="fw-bold text-danger fs-3">@Model.Product.Price.ToString("C", new CultureInfo("vi-VN"))</p>
+            </div>
+            <div>
+                <form method="post">
+                    <input hidden asp-for="@Model.ProductId" />
+                    <div class="d-flex">
+                        <div>
+                            <p class="fw-bold pe-5">Số lượng:</p>
+                        </div>
+                        <div class="quantity-input d-flex">
+                            <button class="rounded-start px-3 border-0 bg-info" onclick="changeQuantity('-')" type="button">-</button>
+                            <input class="text-center fw-bold" id="quantity" type="number" asp-for="@Model.Count" />
+                            <button class="rounded-end px-3 border-0 bg-info" onclick="changeQuantity('+')" type="button">+</button>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-danger w-50 p-3" type="submit">Add to Cart</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Product.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Product.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Product.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.ISBN)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Product.ISBN)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Product.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.ImgUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Product.ImgUrl)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.CategoryId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Product.CategoryId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.CoverTypeId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Product.CoverTypeId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.AuthorId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Product.AuthorId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.PublisherId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Product.PublisherId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.SupplierId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Product.SupplierId)
-        </dd>
-    </dl>
-</div>
-<div>
-    <form method="post">
-        <input type="number" asp-for="@Model.Count" />
-        <input hidden asp-for="@Model.ProductId" />
-        <button type="submit">Add to Cart</button>
-    </form>
-    
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Scripts {
+    <style>
+        /* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+        .quantity-input input {
+            width: 70px;
+        }
+    </style>
+
+    <script>
+        function changeQuantity(sign) {
+            const quantityEle = document.getElementById("quantity");
+            var quantity = parseInt(quantityEle.value);
+
+            if(sign == "+") {
+                quantityEle.value = quantity + 1;
+            }
+
+            if (sign == "-") {
+                if(quantity == 1) return;
+                quantityEle.value = quantity - 1;
+            }
+        }
+    </script>
+}

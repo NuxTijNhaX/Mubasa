@@ -1,83 +1,118 @@
-﻿@model Mubasa.Models.Product
+﻿@using Microsoft.Extensions.Localization;
+@using Mubasa.Web.Areas.Customer.Controllers;
+@inject IStringLocalizer<HomeController> HomeLocalizer;
+
+@model Mubasa.Models.ViewModels.ProductVM
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = $"{@HomeLocalizer["Edit"]} {@HomeLocalizer["Product"]}";
 }
 
-<h1>Edit</h1>
-
-<h4>Product</h4>
+<h1>@HomeLocalizer["Edit"] @HomeLocalizer["Product"]</h1>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+    <div class="">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <input asp-for="Product.Id" hidden />
+            <input asp-for="Product.ImgUrl" hidden />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
+                <label asp-for="Product.Name" class="control-label"></label>
+                <input asp-for="Product.Name" class="form-control" />
+                <span asp-validation-for="Product.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Product.Description" class="control-label"></label>
+                <textarea asp-for="Product.Description" rows="5" class="form-control"></textarea>
+                <span asp-validation-for="Product.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Product.ISBN" class="control-label"></label>
+                <input asp-for="Product.ISBN" class="form-control" />
+                <span asp-validation-for="Product.ISBN" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ISBN" class="control-label"></label>
-                <input asp-for="ISBN" class="form-control" />
-                <span asp-validation-for="ISBN" class="text-danger"></span>
+                <label asp-for="Product.Price" class="control-label"></label>
+                <input asp-for="Product.Price" class="form-control" />
+                <span asp-validation-for="Product.Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+                <label asp-for="Product.ImgUrl" class="control-label"></label>
+                <input id="uploadedFile" type="file" name="file" asp-for="Product.ImgUrl" class="form-control" accept=".jpg, .jpeg, .png" />
+                <span asp-validation-for="Product.ImgUrl" class="text-danger"></span>
+                
+                <img id="display-img" src="@Model.Product.ImgUrl" class="col-3" />
             </div>
             <div class="form-group">
-                <label asp-for="ImgUrl" class="control-label"></label>
-                <input asp-for="ImgUrl" class="form-control" />
-                <span asp-validation-for="ImgUrl" class="text-danger"></span>
+                <label asp-for="Product.CategoryId" class="control-label"></label>
+                <select asp-for="Product.CategoryId" asp-items="@Model.CategoryList" class="form-select">
+                    <option disabled selected>--- Select ---</option>
+                </select>
+                <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <input asp-for="CategoryId" class="form-control" />
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                <label asp-for="Product.CoverTypeId" class="control-label"></label>
+                <select asp-for="Product.CoverTypeId" asp-items="@Model.CoverTypeList" class="form-select">
+                    <option disabled selected>--- Select ---</option>
+                </select>
+                <span asp-validation-for="Product.CoverTypeId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CoverTypeId" class="control-label"></label>
-                <input asp-for="CoverTypeId" class="form-control" />
-                <span asp-validation-for="CoverTypeId" class="text-danger"></span>
+                <label asp-for="Product.AuthorId" class="control-label"></label>
+                <select asp-for="Product.AuthorId" asp-items="@Model.AuthorList" class="form-select">
+                    <option disabled selected>--- Select ---</option>
+                </select>
+                <span asp-validation-for="Product.AuthorId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AuthorId" class="control-label"></label>
-                <input asp-for="AuthorId" class="form-control" />
-                <span asp-validation-for="AuthorId" class="text-danger"></span>
+                <label asp-for="Product.PublisherId" class="control-label"></label>
+                <select asp-for="Product.PublisherId" asp-items="@Model.PublisherList" class="form-select">
+                    <option disabled selected>--- Select ---</option>
+                </select>
+                <span asp-validation-for="Product.PublisherId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PublisherId" class="control-label"></label>
-                <input asp-for="PublisherId" class="form-control" />
-                <span asp-validation-for="PublisherId" class="text-danger"></span>
+                <label asp-for="Product.SupplierId" class="control-label"></label>
+                <select asp-for="Product.SupplierId" asp-items="@Model.SupplierList" class="form-select">
+                    <option disabled selected>--- Select ---</option>
+                </select>
+                <span asp-validation-for="Product.SupplierId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SupplierId" class="control-label"></label>
-                <input asp-for="SupplierId" class="form-control" />
-                <span asp-validation-for="SupplierId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <button type="submit" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                    </svg>
+                    @HomeLocalizer["Edit"]
+                </button>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-warning" asp-action="Index">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+        </svg>
+        @HomeLocalizer["Back to List"]
+    </a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        const imgInput = document.getElementById("uploadedFile");
+        const displayImg = document.getElementById("display-img");
+        imgInput.addEventListener("change", function () {
+            const reader = new FileReader();
+            displayImg.style.display = "block";
+            reader.addEventListener("load", function () {
+                displayImg.setAttribute("src", this.result);
+            });
+            reader.readAsDataURL(this.files[0]);
+        });
+    </script>
 }
