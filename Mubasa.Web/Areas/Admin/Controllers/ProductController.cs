@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
 using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
 using Mubasa.Models.ViewModels;
 using Mubasa.Utility;
+using Mubasa.Web.Areas.Customer.Controllers;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Mubasa.Web.Areas.Admin.Controllers
 {
@@ -14,17 +18,18 @@ namespace Mubasa.Web.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _db;
         private readonly IWebHostEnvironment _webHostEnvironment;
-
-        public ProductController(IUnitOfWork db, IWebHostEnvironment webHostEnvironment)
+        private readonly IStringLocalizer<HomeController> _localizer;
+        public ProductController(IUnitOfWork db, IWebHostEnvironment webHostEnvironment, IStringLocalizer<HomeController> homeLocalizer)
         {
             _db = db;
             _webHostEnvironment = webHostEnvironment;
+            _localizer = homeLocalizer;
         }
 
         // GET: ProductController
         public IActionResult Index()
         {
-            IEnumerable<Product> products = _db.Product.GetAll();
+            IEnumerable<Product> products = _db.Product.GetAll(includeProp: "Category,CoverType,Author,Publisher,Supplier");
 
             return View(products);
         }
@@ -73,10 +78,22 @@ namespace Mubasa.Web.Areas.Admin.Controllers
         // POST: ProductController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(ProductVM productVM, IFormFile? file)
+        public IActionResult Create(ProductVM productVM, IFormFile file)
         {
             try
             {
+                //if (file != null)
+                //{
+                //    string[] acceptingImgExtensions = new string[3] { ".jpg", ".jpeg", ".png" };
+                //    string fileExtension = Path.GetExtension(file.FileName);
+                
+
+                //if (!Array.Exists(acceptingImgExtensions, item => item == fileExtension))
+                //{
+                //    ModelState.AddModelError("Product.ImgUrl", "Tải đúng định dạng ảnh cho phép");
+                //}
+                //}
+
                 if (ModelState.IsValid)
                 {
                     if(file != null)
@@ -92,7 +109,7 @@ namespace Mubasa.Web.Areas.Admin.Controllers
                             file.CopyTo(fileStream);
                         }
 
-                        productVM.Product.ImgUrl = @"images\product" + completeFileName;
+                        productVM.Product.ImgUrl = @"\images\product\" + completeFileName;
                     }
 
                     _db.Product.Add(productVM.Product);
@@ -124,24 +141,79 @@ namespace Mubasa.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return View(product);
+            ProductVM productVM = new ProductVM()
+            {
+                Product = product,
+                AuthorList = _db.Author.GetAll().Select(
+                    i => new SelectListItem
+                    {
+                        Value = i.Id.ToString(),
+                        Text = i.Name,
+                    }),
+                CategoryList = _db.Category.GetAll().Select(
+                    i => new SelectListItem
+                    {
+                        Value = i.Id.ToString(),
+                        Text = i.Name,
+                    }),
+                CoverTypeList = _db.CoverType.GetAll().Select(
+                    i => new SelectListItem
+                    {
+                        Value = i.Id.ToString(),
+                        Text = i.Name,
+                    }),
+                PublisherList = _db.Publisher.GetAll().Select(
+                    i => new SelectListItem
+                    {
+                        Value = i.Id.ToString(),
+                        Text = i.Name,
+                    }),
+                SupplierList = _db.Supplier.GetAll().Select(
+                    i => new SelectListItem
+                    {
+                        Value = i.Id.ToString(),
+                        Text = i.Name,
+                    })
+            };
+
+            return View(productVM);
         }
 
         // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Product product)
+        public IActionResult Edit(ProductVM productVM, IFormFile? file)
         {
             try
             {
-                if (product.Name.All((ch) => Extensions.IsInvalidCharactor(ch)))
-                {
-                    ModelState.AddModelError("Name", "Vui lòng không sử dụng ký tự đặc biệt.");
-                }
-
                 if (ModelState.IsValid)
                 {
-                    _db.Product.Update(product);
+                    if (file != null)
+                    {
+                        string rootPath = _webHostEnvironment.WebRootPath;
+                        string newFileName = file.FileName + Guid.NewGuid().ToString();
+                        string storedFolderPath = Path.Combine(rootPath, @"images\product");
+                        string completeFileName = newFileName + Path.GetExtension(file.FileName);
+
+                        string completeFilePath = Path.Combine(storedFolderPath, completeFileName);
+                        using (var fileStream = new FileStream(completeFilePath, FileMode.Create))
+                        {
+                            file.CopyTo(fileStream);
+                        }
+
+                        if(productVM.Product.ImgUrl != null)
+                        {
+                            var oldImgPath = Path.Combine(rootPath, productVM.Product.ImgUrl.TrimStart('\\'));
+                            if (System.IO.File.Exists(oldImgPath))
+                            {
+                                System.IO.File.Delete(oldImgPath);
+                            }
+                        }
+
+                        productVM.Product.ImgUrl = @"\images\product\" + completeFileName;
+                    }
+
+                    _db.Product.Update(productVM.Product);
                     _db.Save();
 
                     return RedirectToAction(nameof(Index));
@@ -155,28 +227,9 @@ namespace Mubasa.Web.Areas.Admin.Controllers
             }
         }
 
-        // GET: ProductController/Delete/5
-        public IActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var product = _db.Product.GetFirstOrDefault(i => i.Id == id);
-
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return View(product);
-        }
-
         // POST: ProductController/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeletePost(int id)
+        [HttpDelete]
+        public IActionResult Delete(int id)
         {
             try
             {
@@ -184,17 +237,23 @@ namespace Mubasa.Web.Areas.Admin.Controllers
 
                 if (product == null)
                 {
-                    return NotFound();
+                    return Json(new { success = false, message = $"{_localizer["Not Found"]}" });
+                }
+
+                var imgPath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImgUrl.TrimStart('\\'));
+                if(System.IO.File.Exists(imgPath))
+                {
+                    System.IO.File.Delete(imgPath);
                 }
 
                 _db.Product.Remove(product);
                 _db.Save();
 
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = $"{_localizer["Delete Successful"]}" });
             }
             catch
             {
-                return View();
+                return Json(new { success = false, message = $"{_localizer["Error Deleting Data"]}" });
             }
         }
     }
