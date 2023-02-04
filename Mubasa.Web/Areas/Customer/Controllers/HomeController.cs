@@ -29,34 +29,34 @@ namespace Mubasa.Web.Areas.Customer.Controllers
         {
             var product = _db.Product.GetFirstOrDefault(x => x.Id == productId, includeProp: "Category,CoverType,Author,Publisher,Supplier");
 
-            var shoppingCart = new ShoppingCart()
+            var shoppingItem = new ShoppingItem()
             {
                 Count = 1,
                 ProductId = productId,
                 Product = product,
             };
 
-            return View(shoppingCart);
+            return View(shoppingItem);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public IActionResult Details(ShoppingCart shoppingCart)
+        public IActionResult Details(ShoppingItem shoppingItem)
         {
             ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            shoppingCart.ApplicationUserId = claim.Value;
+            shoppingItem.ApplicationUserId = claim.Value;
 
-            var shoppingCartDb = _db.ShoppingCart.GetFirstOrDefault(x => x.ApplicationUserId == shoppingCart.ApplicationUserId && x.ProductId == shoppingCart.ProductId);
+            var shoppingItemDb = _db.ShoppingItem.GetFirstOrDefault(x => x.ApplicationUserId == shoppingItem.ApplicationUserId && x.ProductId == shoppingItem.ProductId);
             
-            if (shoppingCartDb != null)
+            if (shoppingItemDb != null)
             {
-                shoppingCartDb.Count += shoppingCart.Count;
-                _db.ShoppingCart.Update(shoppingCartDb);
+                shoppingItemDb.Count += shoppingItem.Count;
+                _db.ShoppingItem.Update(shoppingItemDb);
             } else
             {
-                _db.ShoppingCart.Add(shoppingCart);
+                _db.ShoppingItem.Add(shoppingItem);
             }
             
             _db.Save();

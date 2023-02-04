@@ -1,84 +1,101 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using Mubasa.DataAccess.Repository.IRepository;
+using Mubasa.Models;
+using Mubasa.Models.ViewModels;
+using System.Security.Claims;
 
 namespace Mubasa.Web.Areas.Customer.Controllers
 {
     [Area("Customer")]
     public class ShoppingCartController : Controller
     {
+        private readonly IUnitOfWork _db;
+        private readonly IStringLocalizer<HomeController> _localizer;
+        public ShoppingCartController(IUnitOfWork db, IStringLocalizer<HomeController> localizer)
+        {
+            _db = db;
+            _localizer = localizer;
+        }
+
         // GET: ShoppingCartController
-        public ActionResult Index()
+        [Authorize]
+        public IActionResult Index()
         {
-            return View();
-        }
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-        // GET: ShoppingCartController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: ShoppingCartController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: ShoppingCartController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
+            ShoppingCartVM shoppingCart = new ShoppingCartVM()
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+                ShoppingCarts = _db.ShoppingItem.GetAll(i => i.ApplicationUserId == claim.Value, includeProp: "Product")
+            };
+
+            foreach (var item in shoppingCart.ShoppingCarts)
             {
-                return View();
+                item.SubTotal = item.Count * item.Product.Price;
+                shoppingCart.GrandTotal += item.SubTotal;
             }
+
+            return View(shoppingCart);
         }
 
-        // GET: ShoppingCartController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: ShoppingCartController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ShoppingCartController/Delete/5
-        public ActionResult Delete(int id)
+        public IActionResult CheckOut()
         {
             return View();
         }
 
         // POST: ShoppingCartController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpDelete]
+        [Authorize]
+        public ActionResult Delete(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+                var shoppingCart = _db.ShoppingItem.GetFirstOrDefault(i => i.ProductId == id && claim.Value == i.ApplicationUserId);
+
+                if (shoppingCart == null)
+                {
+                    return Json(new { success = false, message = $"{_localizer["Not Found"]}" });
+                }
+
+                _db.ShoppingItem.Remove(shoppingCart);
+                _db.Save();
+
+                return Json(new { success = true, message = $"{_localizer["Delete Successful"]}" });
             }
             catch
             {
-                return View();
+                return Json(new { success = false, message = $"{_localizer["Error Deleting Data"]}" });
             }
+        }
+
+        public IActionResult IncreCount(int shoppingItemId)
+        {
+            var shoppingItem = _db.ShoppingItem.GetFirstOrDefault(i => shoppingItemId == i.Id);
+            if (shoppingItem != null)
+            {
+                _db.ShoppingItem.IncreQuantity(shoppingItem, 1);
+                _db.Save();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult DecreCount(int shoppingItemId)
+        {
+            var shoppingItem = _db.ShoppingItem.GetFirstOrDefault(i => shoppingItemId == i.Id);
+            if (shoppingItem != null)
+            {
+                if(shoppingItem.Count == 1) return RedirectToAction(nameof(Index));
+
+                _db.ShoppingItem.DecreQuantity(shoppingItem, 1);
+                _db.Save();
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

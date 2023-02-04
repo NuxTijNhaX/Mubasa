@@ -123,11 +123,20 @@
   <data name="Back to List" xml:space="preserve">
     <value>Trở lại</value>
   </data>
+  <data name="Buy Now" xml:space="preserve">
+    <value>Mua Ngay</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Hủy</value>
   </data>
+  <data name="Cart" xml:space="preserve">
+    <value>Giỏ Hàng</value>
+  </data>
   <data name="Category" xml:space="preserve">
     <value>Danh Mục</value>
+  </data>
+  <data name="Check Out" xml:space="preserve">
+    <value>Thanh Toán</value>
   </data>
   <data name="Confirm Deleting Data" xml:space="preserve">
     <value>Xác Nhận Xóa Dữ Liệu</value>
@@ -147,11 +156,17 @@
   <data name="Delete Successful" xml:space="preserve">
     <value>Xóa Thành Công</value>
   </data>
+  <data name="Do You Want To" xml:space="preserve">
+    <value>Bạn Có Muốn</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Chỉnh Sửa</value>
   </data>
   <data name="Error Deleting Data" xml:space="preserve">
     <value>Đã Có Lỗi Khi Xóa Dữ Liệu</value>
+  </data>
+  <data name="Grand Total" xml:space="preserve">
+    <value>Tổng Số Tiền (gồm VAT)</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Tên</value>
@@ -163,11 +178,20 @@
   <data name="Not Found" xml:space="preserve">
     <value>Không Tìm Thấy</value>
   </data>
+  <data name="Nothing in your cart" xml:space="preserve">
+    <value>Giỏ hàng trống</value>
+  </data>
   <data name="Product" xml:space="preserve">
+    <value>Sản Phẩm</value>
+  </data>
+  <data name="Products" xml:space="preserve">
     <value>Sản Phẩm</value>
   </data>
   <data name="Publisher" xml:space="preserve">
     <value>Nhà Xuất Bản</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Số lượng</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Lưu lại</value>
@@ -175,8 +199,14 @@
   <data name="Search books, authors, ISBNs" xml:space="preserve">
     <value>Tìm kiếm sách, tác giả,.... mà bạn mong muốn</value>
   </data>
+  <data name="Select all" xml:space="preserve">
+    <value>Chọn tất cả</value>
+  </data>
   <data name="Special Charactors" xml:space="preserve">
     <value>Vui lòng không sử dụng ký tự đặc biệt</value>
+  </data>
+  <data name="Subtotal" xml:space="preserve">
+    <value>Thành tiền</value>
   </data>
   <data name="Supplier" xml:space="preserve">
     <value>Nhà Cung Cấp</value>
