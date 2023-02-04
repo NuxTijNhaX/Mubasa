@@ -14,7 +14,7 @@ namespace Mubasa.DataAccess.Repository.IRepository
         ICoverTypeRepository CoverType { get; }
         IProductRepository Product { get; }
         IPublisherRepository Publisher { get; }
-        IShoppingCartRepository ShoppingCart { get; }
+        IShoppingItemRepository ShoppingItem { get; }
         ISupplierRepository Supplier { get; }
 
         void Save();

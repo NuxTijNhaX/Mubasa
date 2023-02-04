@@ -123,11 +123,20 @@
   <data name="Back to List" xml:space="preserve">
     <value>Back to List</value>
   </data>
+  <data name="Buy Now" xml:space="preserve">
+    <value>Buy Now</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Cart" xml:space="preserve">
+    <value>Cart</value>
+  </data>
   <data name="Category" xml:space="preserve">
     <value>Category</value>
+  </data>
+  <data name="Check Out" xml:space="preserve">
+    <value>Check Out</value>
   </data>
   <data name="Confirm Deleting Data" xml:space="preserve">
     <value>Confirm Deleting Data</value>
@@ -147,11 +156,17 @@
   <data name="Delete Successful" xml:space="preserve">
     <value>Delete Successful</value>
   </data>
+  <data name="Do You Want To" xml:space="preserve">
+    <value>Do You Want To</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
   <data name="Error Deleting Data" xml:space="preserve">
     <value>Error Deleting Data</value>
+  </data>
+  <data name="Grand Total" xml:space="preserve">
+    <value>Grand Total (Tax included)</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
@@ -162,11 +177,20 @@
   <data name="Not Found" xml:space="preserve">
     <value>Not Found</value>
   </data>
+  <data name="Nothing in your cart" xml:space="preserve">
+    <value>Nothing in your cart</value>
+  </data>
   <data name="Product" xml:space="preserve">
     <value>Product</value>
   </data>
+  <data name="Products" xml:space="preserve">
+    <value>Product(s)</value>
+  </data>
   <data name="Publisher" xml:space="preserve">
     <value>Publisher</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
@@ -174,8 +198,14 @@
   <data name="Search books, authors, ISBNs" xml:space="preserve">
     <value>Search books, authors, ISBNs</value>
   </data>
+  <data name="Select all" xml:space="preserve">
+    <value>Select all</value>
+  </data>
   <data name="Special Charactors" xml:space="preserve">
     <value>Please do not use special charactors</value>
+  </data>
+  <data name="Subtotal" xml:space="preserve">
+    <value>Subtotal</value>
   </data>
   <data name="Supplier" xml:space="preserve">
     <value>Supplier</value>

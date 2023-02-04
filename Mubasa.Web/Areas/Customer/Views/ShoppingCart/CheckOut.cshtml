@@ -1,0 +1,174 @@
+﻿@using Microsoft.Extensions.Localization;
+@using Mubasa.Web.Areas.Customer.Controllers;
+@using System.Globalization;
+@inject IStringLocalizer<HomeController> homeLocalizer;
+
+@{
+    ViewData["Title"] = homeLocalizer["Check Out"];
+}
+
+<div class="row">
+    <div class="col-9">
+        <!-- Shipping address start -->
+        <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
+            <h1 class="fs-3">Shipping Address</h1>
+            <hr />
+            <div class="row p-2">
+                <label class="col-3">
+                    Full name of recipient:
+                </label>
+                <input class="form-control w-50" />
+            </div>
+            <div class="row p-2">
+                <label class="col-3">
+                    Email:
+                </label>
+                <input type="email" class="col-6 rounded py-1 form-control w-50" />
+            </div>
+            <div class="row p-2">
+                <label class="col-3">
+                    Phone number:
+                </label>
+                <input type="number" class="col-6 rounded py-1 form-control w-50" />
+            </div>
+            <div class="row p-2">
+                <label class="col-3">
+                    Province/City:
+                </label>
+                <select id="province-selector" class="form-select w-50">
+                  <option selected disabled>--- Chọn Tỉnh/Thành Phố ---</option>
+                </select>
+            </div>
+            <div class="row p-2">
+                <label class="col-3">
+                    District:
+                </label>
+                <select id="district-selector" class="form-select w-50">
+                    <option selected disabled>--- Chọn Quận/Huyện ---</option>
+                </select>
+            </div>
+            <div class="row p-2">
+                <label class="col-3">
+                    Wards:
+                </label>
+                <select id="ward-selector" class="form-select w-50">
+                  <option selected disabled>--- Chọn Phường/Xã ---</option>
+                </select>
+            </div>
+            <div class="row p-2">
+                <label class="col-3">
+                    Shipping address:
+                </label>
+                <input class="col-6 rounded py-1 form-control w-50" />
+            </div>
+        </div>
+        <!-- Shipping address end -->
+
+        <!-- Shipping Method start -->
+        <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
+            <h1 class="fs-3">Shipping Method</h1>
+            <hr />
+        </div>
+        <!-- Shipping Method end -->
+
+        <!-- Payment Method start -->
+        <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
+            <h1 class="fs-3">Payment Method</h1>
+            <hr />
+        </div>
+        <!-- Payment Method end -->
+    </div>
+
+    <div class="w-25 border rounded-3 bg-light shadow-sm px-4 py-5 position-fixed top-50 end-0 translate-middle-y me-4">
+        <h1 class="fs-3">Đơn Hàng</h1>
+        <hr />
+        <div class="pb-3 d-flex justify-content-between">
+            <span>@homeLocalizer["Subtotal"]</span>
+            <span>100.000 đ</span>
+        </div>
+        <div class="pb-3 d-flex justify-content-between">
+            <span>Shipping Cost</span>
+            <span>100.000 đ</span>
+        </div>
+        <div class="pb-3 d-flex justify-content-between">
+            <span>Discount</span>
+            <span>100.000 đ</span>
+        </div>
+        <hr />
+        <div class="pb-3 d-flex justify-content-between">
+            <span class="fw-bold">@homeLocalizer["Grand Total"]</span>
+            <span class="fw-bold text-danger fs-5">100.000 đ</span>
+        </div>
+        <div>
+            <a asp-action="CheckOut" class="btn btn-danger w-100 py-3 fw-bold fs-5">@homeLocalizer["Check Out"]</a>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        const uri = "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data";
+        const token = "5d9e0363-a39d-11ed-8183-12cf3da973bf";
+
+        async function fetchAddress(path) {
+            let response = await fetch(`${uri}/${path}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Token': `${token}`
+                },
+            });
+
+            let result = await response.json();
+
+            return await result.data;
+        }
+
+        async function loadProvince() {
+            const province = document.getElementById("province-selector");
+            const provinceData = await fetchAddress("province");
+
+            createOption(provinceData, province, "ProvinceID", "ProvinceName");
+        }
+
+        async function loadDistrict(provinceId) {
+            const district = document.getElementById("district-selector");
+            district.replaceChildren();
+            const districtData = await fetchAddress(`district?province_id=${provinceId}`);
+
+            createOption(districtData, district, "DistrictID", "DistrictName");
+        }
+
+        async function loadWard(districtId) {
+            const ward = document.getElementById("ward-selector");
+            ward.replaceChildren();
+            const wardData = await fetchAddress(`ward?district_id=${districtId}`);
+
+            createOption(wardData, ward, "WardCode", "WardName");
+        }
+
+        function createOption(data, parent, value, text) {
+            data.map(i => {
+                let opt = document.createElement("option");
+                opt.value = i[value];
+                opt.text = i[text];
+
+                parent.appendChild(opt);
+            });
+        }
+
+        function intialEvent() {
+            loadProvince();
+            const province = document.getElementById("province-selector");
+            const district = document.getElementById("district-selector");
+
+            province.addEventListener("change", function() {
+                loadDistrict(this.value);
+            })
+            district.addEventListener("change", function () {
+                loadWard(this.value);
+            })
+        }
+
+        window.addEventListener('load', intialEvent);
+    </script>
+}

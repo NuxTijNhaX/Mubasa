@@ -3,7 +3,7 @@
 @using System.Globalization;
 @inject IStringLocalizer<HomeController> homeLocalizer;
 
-@model Mubasa.Models.ShoppingCart
+@model Mubasa.Models.ShoppingItem
 
 @{
     ViewData["Title"] = @Model.Product.Name;
@@ -64,18 +64,6 @@
 
 @section Scripts {
     <style>
-        /* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
-}
-
         .quantity-input input {
             width: 70px;
         }
