@@ -17,7 +17,7 @@ namespace Mubasa.DataAccess.Repository
         public ICoverTypeRepository CoverType { get; private set; }
         public IProductRepository Product { get; private set; }
         public IPublisherRepository Publisher { get; private set; }
-        public IShoppingCartRepository ShoppingCart { get; private set; }
+        public IShoppingItemRepository ShoppingItem { get; private set; }
         public ISupplierRepository Supplier { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
@@ -29,7 +29,7 @@ namespace Mubasa.DataAccess.Repository
             CoverType = new CoverTypeRepository(db);
             Product = new ProductRepository(db);
             Publisher = new PublisherRepository(db);
-            ShoppingCart = new ShoppingCartRepository(db);
+            ShoppingItem = new ShoppingItemRepository(db);
             Supplier = new SupplierRepository(db);
         }
 
