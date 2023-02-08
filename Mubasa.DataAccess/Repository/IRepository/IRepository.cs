@@ -10,6 +10,7 @@ namespace Mubasa.DataAccess.Repository.IRepository
     public interface IRepository<T> where T : class
     {
         void Add(T entity);
+        void AddRange(IEnumerable<T> entities);
         IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProp = null);
         T GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProp = null);
         void Update(T entity);
