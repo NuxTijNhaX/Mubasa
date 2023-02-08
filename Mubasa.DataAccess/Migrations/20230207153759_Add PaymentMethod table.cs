@@ -4,12 +4,12 @@
 
 namespace Mubasa.DataAccess.Migrations
 {
-    public partial class AddCategory : Migration
+    public partial class AddPaymentMethodtable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "PaymentMethods",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -18,14 +18,14 @@ namespace Mubasa.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_PaymentMethods", x => x.Id);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "PaymentMethods");
         }
     }
 }
