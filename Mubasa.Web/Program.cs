@@ -7,6 +7,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Mubasa.Utility;
+using Mubasa.Utility.ThirdParties.Carrier;
 
 namespace Mubasa.Web
 {
@@ -37,6 +38,9 @@ namespace Mubasa.Web
                 options.SupportedCultures = cultures;
                 options.SupportedUICultures= cultures;
             });
+
+            builder.Services.Configure<GiaoHangNhanh>(
+                builder.Configuration.GetSection("GiaoHangNhanh"));
 
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 

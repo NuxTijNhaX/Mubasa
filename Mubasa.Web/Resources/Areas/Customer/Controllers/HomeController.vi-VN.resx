@@ -156,6 +156,9 @@
   <data name="Delete Successful" xml:space="preserve">
     <value>Xóa Thành Công</value>
   </data>
+  <data name="District" xml:space="preserve">
+    <value>Quận/Huyện</value>
+  </data>
   <data name="Do You Want To" xml:space="preserve">
     <value>Bạn Có Muốn</value>
   </data>
@@ -165,8 +168,14 @@
   <data name="Error Deleting Data" xml:space="preserve">
     <value>Đã Có Lỗi Khi Xóa Dữ Liệu</value>
   </data>
+  <data name="Full name of recipient" xml:space="preserve">
+    <value>Họ và tên người nhận</value>
+  </data>
   <data name="Grand Total" xml:space="preserve">
-    <value>Tổng Số Tiền (gồm VAT)</value>
+    <value>Tổng Số Tiền</value>
+  </data>
+  <data name="Home address" xml:space="preserve">
+    <value>Số nhà</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Tên</value>
@@ -181,11 +190,20 @@
   <data name="Nothing in your cart" xml:space="preserve">
     <value>Giỏ hàng trống</value>
   </data>
+  <data name="Payment Method" xml:space="preserve">
+    <value>Phương Thức Thanh Toán</value>
+  </data>
+  <data name="Phone number" xml:space="preserve">
+    <value>Số điện thoại</value>
+  </data>
   <data name="Product" xml:space="preserve">
     <value>Sản Phẩm</value>
   </data>
   <data name="Products" xml:space="preserve">
     <value>Sản Phẩm</value>
+  </data>
+  <data name="Province/City" xml:space="preserve">
+    <value>Tỉnh/Thành phố</value>
   </data>
   <data name="Publisher" xml:space="preserve">
     <value>Nhà Xuất Bản</value>
@@ -199,8 +217,17 @@
   <data name="Search books, authors, ISBNs" xml:space="preserve">
     <value>Tìm kiếm sách, tác giả,.... mà bạn mong muốn</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>Chọn</value>
+  </data>
   <data name="Select all" xml:space="preserve">
     <value>Chọn tất cả</value>
+  </data>
+  <data name="Shipping Address" xml:space="preserve">
+    <value>Địa Chỉ Giao Hàng</value>
+  </data>
+  <data name="Shipping Method" xml:space="preserve">
+    <value>Phương Thức Giao Hàng</value>
   </data>
   <data name="Special Charactors" xml:space="preserve">
     <value>Vui lòng không sử dụng ký tự đặc biệt</value>
@@ -210,6 +237,12 @@
   </data>
   <data name="Supplier" xml:space="preserve">
     <value>Nhà Cung Cấp</value>
+  </data>
+  <data name="Tax included" xml:space="preserve">
+    <value>Gồm VAT</value>
+  </data>
+  <data name="Wards" xml:space="preserve">
+    <value>Phường/Xã</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Có</value>

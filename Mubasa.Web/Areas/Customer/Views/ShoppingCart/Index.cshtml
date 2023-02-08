@@ -31,6 +31,7 @@
                         <span>@homeLocalizer["Subtotal"]</span>
                     </div>
                     <div class="col-1">
+                        
                     </div>
                 </div>
                 <div class="row border rounded-3 bg-light shadow-sm p-3 py-4">
@@ -85,15 +86,32 @@
                 </div>
             </div>
             <div class="col-4">
+                <div class="row border rounded-3 bg-light shadow-sm p-3 mb-3">
+                    <div class="block-header d-flex justify-content-between">
+                        <h5 class="fw-bold">Giao tới</h5>
+                        <a class="block-header__nav">Thay đổi</a>
+                    </div>
+                    <hr />
+                    <div class="customer_info d-flex gx-3">
+                        <p class="fw-bold">@Model.Address.ReceiverName</p>
+                        <p class="fw-bold">&nbsp - &nbsp</p>
+                        <p class="fw-bold">@Model.Address.PhoneNumber</p>
+                    </div>
+                    <div class="address">
+                        <span class="address__type address__type--home">
+                            <span class="text-success fw-bold bg-white px-1">@Model.Address.Name</span> &nbsp &nbsp @Model.Address.FullAddress
+                        </span>
+                    </div>
+                </div>
                 <div class="row border rounded-3 bg-light shadow-sm p-3">
                     <div class="pb-3 d-flex justify-content-between">
                         <span>@homeLocalizer["Subtotal"]</span>
-                        <span>@Model.GrandTotal.ToString("C", new CultureInfo("vi-VN"))</span>
+                        <span>@Model.SubTotal.ToString("C", new CultureInfo("vi-VN"))</span>
                     </div>
                     <hr />
                     <div class="pb-3 d-flex justify-content-between">
                         <span class="fw-bold">@homeLocalizer["Grand Total"]</span>
-                        <span class="fw-bold text-danger fs-5">@Model.GrandTotal.ToString("C", new CultureInfo("vi-VN"))</span>
+                        <span class="fw-bold text-danger fs-5">@Model.SubTotal.ToString("C", new CultureInfo("vi-VN"))</span>
                     </div>
                     <div>
                         <a asp-action="CheckOut" class="btn btn-danger w-100 py-3 fw-bold fs-5">@homeLocalizer["Check Out"]</a>
@@ -103,35 +121,3 @@
         </div>
     </form>
 </div>
-
-@section Scripts {
-    <script>
-        //function myFunction() {
-        //    console.log("The input value has changed. The new value is:" + this.value);
-        //}
-
-        //document.getElementById("quantity").addEventListener("change", myFunction);
-
-
-        //function changeQuantity(sign) {
-        //    const quantityEle = document.getElementById("quantity");
-        //    var quantity = parseInt(quantityEle.value);
-
-        //    if (sign) {
-        //        if (sign == "+") {
-        //            quantityEle.value = quantity + 1;
-        //        }
-
-        //        if (sign == "-") {
-        //            if (quantity == 1) return;
-        //            quantityEle.value = quantity - 1;
-        //        }
-        //    }
-        //}
-
-        //function convertCurrencyToInt(price) {
-        //    var number = price.replace("đ", "").replace(".", "");
-        //    return parseInt(number);
-        //}
-    </script>
-}

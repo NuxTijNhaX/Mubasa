@@ -1,65 +1,41 @@
 ﻿@using Microsoft.Extensions.Localization;
+@using Mubasa.Utility;
 @using Mubasa.Web.Areas.Customer.Controllers;
 @using System.Globalization;
 @inject IStringLocalizer<HomeController> homeLocalizer;
+
+@model Mubasa.Models.ViewModels.CheckoutVM;
 
 @{
     ViewData["Title"] = homeLocalizer["Check Out"];
 }
 
+<form method="post" asp-action="Checkout">
 <div class="row">
     <div class="col-9">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input hidden asp-for="Address.WardId" />
         <!-- Shipping address start -->
         <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
             <h1 class="fs-3">Shipping Address</h1>
             <hr />
             <div class="row p-2">
-                <label class="col-3">
-                    Full name of recipient:
+                <label asp-for="Address.ReceiverName" class="col-3">
+                    @homeLocalizer["Full name of recipient"]:
                 </label>
-                <input class="form-control w-50" />
+                <input disabled asp-for="Address.ReceiverName" class="form-control w-50" />
             </div>
             <div class="row p-2">
-                <label class="col-3">
-                    Email:
+                <label asp-for="Address.PhoneNumber" class="col-3">
+                    @homeLocalizer["Phone number"]:
                 </label>
-                <input type="email" class="col-6 rounded py-1 form-control w-50" />
+                <input disabled asp-for="Address.PhoneNumber" type="number" class="col-6 rounded py-1 form-control w-50" />
             </div>
             <div class="row p-2">
-                <label class="col-3">
-                    Phone number:
+                <label asp-for="Address.FullAddress" class="col-3">
+                    @homeLocalizer["Shipping Address"]:
                 </label>
-                <input type="number" class="col-6 rounded py-1 form-control w-50" />
-            </div>
-            <div class="row p-2">
-                <label class="col-3">
-                    Province/City:
-                </label>
-                <select id="province-selector" class="form-select w-50">
-                  <option selected disabled>--- Chọn Tỉnh/Thành Phố ---</option>
-                </select>
-            </div>
-            <div class="row p-2">
-                <label class="col-3">
-                    District:
-                </label>
-                <select id="district-selector" class="form-select w-50">
-                    <option selected disabled>--- Chọn Quận/Huyện ---</option>
-                </select>
-            </div>
-            <div class="row p-2">
-                <label class="col-3">
-                    Wards:
-                </label>
-                <select id="ward-selector" class="form-select w-50">
-                  <option selected disabled>--- Chọn Phường/Xã ---</option>
-                </select>
-            </div>
-            <div class="row p-2">
-                <label class="col-3">
-                    Shipping address:
-                </label>
-                <input class="col-6 rounded py-1 form-control w-50" />
+                <textarea disabled asp-for="Address.FullAddress" class="col-6 rounded py-1 form-control w-50" style="resize: none;"></textarea>
             </div>
         </div>
         <!-- Shipping address end -->
@@ -68,6 +44,45 @@
         <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
             <h1 class="fs-3">Shipping Method</h1>
             <hr />
+            <div id="shipping-options">
+                @if(Model.ShippingMethods.Count() == 0)
+                {
+                    <div class="text-center">
+                        <span class="d-block text-danger fw-bold fs-5">Xin lỗi</span>
+                        <span class="d-block">Khu vực chưa hỗ trợ vận chuyển</span>
+                    </div>
+                }
+                else
+                {
+                    var serviceId = TempData["ServiceId"].ToString() ?? "";
+                    var serviceTypeId = TempData["ServiceTypeId"].ToString() ?? "";
+                    TempData.Keep("ServiceId");
+                    TempData.Keep("ServiceTypeId");
+
+                    <fieldset id="shipping-group">
+                        @foreach (var (item, index) in Model.ShippingMethods.WithIndex())
+                        {
+                            <div class="form-check py-3">
+                                <input class="form-check-input shipping-radio" type="radio" name="shipping-group" id="@index" onchange="updateShipMethod(@item.ServiceId, @item.ServiceTypeId)">
+                                <label class="form-check-label ps-2 d-flex flex-column" for="@index">
+                                    <span class="fw-bold"><span>@item.Name</span>: <span>@item.Price.ToString("c", new CultureInfo("vi-VN"))</span></span>
+                                    <span class="fst-italic text-danger">Dự kiến: <span>@item.ExpectedDay</span></span>
+                                </label>
+                            </div>
+
+                            @if (serviceId != null && serviceTypeId != null)
+                            {
+                                if(serviceId == item.ServiceId && serviceTypeId == item.ServiceTypeId) {
+                                    <script>
+                                        const checkedEle = document.getElementById(@index);
+                                        checkedEle.checked = true;
+                                    </script>
+                                }
+                            }
+                        }
+                    </fieldset>
+                }
+            </div>
         </div>
         <!-- Shipping Method end -->
 
@@ -75,8 +90,60 @@
         <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
             <h1 class="fs-3">Payment Method</h1>
             <hr />
+
+            <div id="payment-options" class="ms-2">
+                <fieldset id="payment-group">
+                @foreach (var item in Model.PaymentMethods)
+                {
+                    <div class="form-check py-2">
+                            <input checked class="form-check-input" type="radio" name="payment-group" id="@item.Id" />
+                        <label class="form-check-label ps-2 fw-bold" for="@item.Id">
+                            @item.Name
+                        </label>
+                    </div>
+                }
+                </fieldset>
+            </div>
         </div>
         <!-- Payment Method end -->
+
+        <!-- Checking Again start -->
+        <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
+            <h1 class="fs-3">Checking Again</h1>
+            <hr />
+            @{
+                var last = Model.ShoppingCarts.Last();
+                @foreach (var item in Model.ShoppingCarts)
+                {
+                    <div class="row">
+                    <div class="col-8">
+                        <div class="row">
+                            <a class="col-4 text-center pointer" asp-controller="Home" asp-action="Details" asp-route-productId="@item.Product.Id">
+                                <img src="@item.Product.ImgUrl" width="120" />
+                            </a>
+                            <div class="col-8 d-flex flex-column justify-content-between">
+                                <a class="pointer text-decoration-none" asp-controller="Home" asp-action="Details" asp-route-productId="@item.Product.Id">
+                                    <span class="fw-bold">@item.Product.Name</span>
+                                </a>
+                                <span class="product-price fw-bold">@item.Product.Price.ToString("C", new CultureInfo("vi-VN"))</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1 d-flex justify-content-center align-items-center">
+                        <span>@item.Count</span>
+                    </div>
+                    <div class="col-3 d-flex justify-content-center align-items-center">
+                        <span class="product-price-quantity fw-bold text-danger fs-5">@item.SubTotal.ToString("C", new CultureInfo("vi-VN"))</span>
+                    </div>
+                    </div>
+                    @if (!item.Equals(last))
+                    {
+                        <hr class="my-4 w-75 m-auto" />
+                    }
+                }
+            }
+        </div>
+        <!-- Checking Again end -->
     </div>
 
     <div class="w-25 border rounded-3 bg-light shadow-sm px-4 py-5 position-fixed top-50 end-0 translate-middle-y me-4">
@@ -84,91 +151,38 @@
         <hr />
         <div class="pb-3 d-flex justify-content-between">
             <span>@homeLocalizer["Subtotal"]</span>
-            <span>100.000 đ</span>
+            <span>@Model.SubTotal.ToString("c", new CultureInfo("vi-VN"))</span>
         </div>
         <div class="pb-3 d-flex justify-content-between">
             <span>Shipping Cost</span>
-            <span>100.000 đ</span>
+            <span>@Model.OrderHeader.ShippingCost.ToString("c", new CultureInfo("vi-VN"))</span>
         </div>
         <div class="pb-3 d-flex justify-content-between">
             <span>Discount</span>
-            <span>100.000 đ</span>
+            <span>@Model.OrderHeader.Discount.ToString("c", new CultureInfo("vi-VN"))</span>
         </div>
         <hr />
         <div class="pb-3 d-flex justify-content-between">
-            <span class="fw-bold">@homeLocalizer["Grand Total"]</span>
-            <span class="fw-bold text-danger fs-5">100.000 đ</span>
+            <span class="fw-bold">@homeLocalizer["Grand Total"] <span class="fst-italic fw-normal">(@homeLocalizer["Tax included"])</span></span>
+            <span class="fw-bold text-danger fs-5">@Model.OrderHeader.GrandTotal.ToString("c", new CultureInfo("vi-VN"))</span>
         </div>
         <div>
             <a asp-action="CheckOut" class="btn btn-danger w-100 py-3 fw-bold fs-5">@homeLocalizer["Check Out"]</a>
         </div>
     </div>
 </div>
+</form>
+
 @section Scripts {
     <script>
-        const uri = "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data";
-        const token = "5d9e0363-a39d-11ed-8183-12cf3da973bf";
-
-        async function fetchAddress(path) {
-            let response = await fetch(`${uri}/${path}`, {
+        async function updateShipMethod(service_id, service_type_id) {
+            const host = window.location.host;
+            const uri = `https://${host}/Customer/ShoppingCart/UpdateShippingMethod?serviceId=${service_id}&serviceTypeId=${service_type_id}`;
+            await fetch(uri, {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Token': `${token}`
-                },
             });
 
-            let result = await response.json();
-
-            return await result.data;
+            window.location.reload();
         }
-
-        async function loadProvince() {
-            const province = document.getElementById("province-selector");
-            const provinceData = await fetchAddress("province");
-
-            createOption(provinceData, province, "ProvinceID", "ProvinceName");
-        }
-
-        async function loadDistrict(provinceId) {
-            const district = document.getElementById("district-selector");
-            district.replaceChildren();
-            const districtData = await fetchAddress(`district?province_id=${provinceId}`);
-
-            createOption(districtData, district, "DistrictID", "DistrictName");
-        }
-
-        async function loadWard(districtId) {
-            const ward = document.getElementById("ward-selector");
-            ward.replaceChildren();
-            const wardData = await fetchAddress(`ward?district_id=${districtId}`);
-
-            createOption(wardData, ward, "WardCode", "WardName");
-        }
-
-        function createOption(data, parent, value, text) {
-            data.map(i => {
-                let opt = document.createElement("option");
-                opt.value = i[value];
-                opt.text = i[text];
-
-                parent.appendChild(opt);
-            });
-        }
-
-        function intialEvent() {
-            loadProvince();
-            const province = document.getElementById("province-selector");
-            const district = document.getElementById("district-selector");
-
-            province.addEventListener("change", function() {
-                loadDistrict(this.value);
-            })
-            district.addEventListener("change", function () {
-                loadWard(this.value);
-            })
-        }
-
-        window.addEventListener('load', intialEvent);
     </script>
 }

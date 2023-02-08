@@ -156,6 +156,9 @@
   <data name="Delete Successful" xml:space="preserve">
     <value>Delete Successful</value>
   </data>
+  <data name="District" xml:space="preserve">
+    <value>District</value>
+  </data>
   <data name="Do You Want To" xml:space="preserve">
     <value>Do You Want To</value>
   </data>
@@ -165,8 +168,14 @@
   <data name="Error Deleting Data" xml:space="preserve">
     <value>Error Deleting Data</value>
   </data>
+  <data name="Full name of recipient" xml:space="preserve">
+    <value>Full name of recipient</value>
+  </data>
   <data name="Grand Total" xml:space="preserve">
-    <value>Grand Total (Tax included)</value>
+    <value>Grand Total</value>
+  </data>
+  <data name="Home address" xml:space="preserve">
+    <value>Home address</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
@@ -180,11 +189,20 @@
   <data name="Nothing in your cart" xml:space="preserve">
     <value>Nothing in your cart</value>
   </data>
+  <data name="Payment Method" xml:space="preserve">
+    <value>Payment Method</value>
+  </data>
+  <data name="Phone number" xml:space="preserve">
+    <value>Phone number</value>
+  </data>
   <data name="Product" xml:space="preserve">
     <value>Product</value>
   </data>
   <data name="Products" xml:space="preserve">
     <value>Product(s)</value>
+  </data>
+  <data name="Province/City" xml:space="preserve">
+    <value>Province/City</value>
   </data>
   <data name="Publisher" xml:space="preserve">
     <value>Publisher</value>
@@ -198,8 +216,17 @@
   <data name="Search books, authors, ISBNs" xml:space="preserve">
     <value>Search books, authors, ISBNs</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
   <data name="Select all" xml:space="preserve">
     <value>Select all</value>
+  </data>
+  <data name="Shipping Address" xml:space="preserve">
+    <value>Shipping Address</value>
+  </data>
+  <data name="Shipping Method" xml:space="preserve">
+    <value>Shipping Method</value>
   </data>
   <data name="Special Charactors" xml:space="preserve">
     <value>Please do not use special charactors</value>
@@ -209,6 +236,12 @@
   </data>
   <data name="Supplier" xml:space="preserve">
     <value>Supplier</value>
+  </data>
+  <data name="Tax included" xml:space="preserve">
+    <value>Tax included</value>
+  </data>
+  <data name="Wards" xml:space="preserve">
+    <value>Wards</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
