@@ -15,5 +15,6 @@ namespace Mubasa.DataAccess.Repository.IRepository
         T GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProp = null);
         void Update(T entity);
         void Remove(T entity);
+        void RemoveRange(IEnumerable<T> entities);
     }
 }
