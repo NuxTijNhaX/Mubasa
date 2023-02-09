@@ -8,7 +8,7 @@ namespace Mubasa.Models.ViewModels
 {
     public class ShoppingCartVM
     {
-        public IEnumerable<ShoppingItem> ShoppingCarts { get; set; }
+        public IEnumerable<ShoppingItem> ShoppingCart { get; set; }
         public Address Address { get; set; }
         public double SubTotal { get; set; } = 0;
     }

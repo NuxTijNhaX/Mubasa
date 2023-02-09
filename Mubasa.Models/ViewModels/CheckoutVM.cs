@@ -9,11 +9,9 @@ namespace Mubasa.Models.ViewModels
 {
     public class CheckoutVM
     {
-        public IEnumerable<ShoppingItem> ShoppingCarts { get; set; }
-        public Address Address { get; set; }
+        public ShoppingCartVM ShoppingCartVM { get; set; }
         public OrderHeader OrderHeader { get; set; }
         public IEnumerable<ShippingMethod> ShippingMethods { get; set; }
         public IEnumerable<PaymentMethod> PaymentMethods { get; set; }
-        public double SubTotal { get; set; } = 0;
     }
 }
