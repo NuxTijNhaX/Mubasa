@@ -20,6 +20,7 @@ namespace Mubasa.Models
         public double Discount { get; set; } = 0;
         public string? OrderStatus { get; set; }
         public string? PaymentStatus { get; set; }
+        public string? ShippingInfo { get; set; }
         public string? TrackingNumber { get; set; }
         [Required]
         public string? ShippingAddress { get; set; }
@@ -36,6 +37,9 @@ namespace Mubasa.Models
         public DateTime CreatedDate { get; set; }
         public DateTime PaymentedDate { get; set; }
         public DateTime PaymentDueDate { get; set; }
+
+        public int PaymentMethodId { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
 
         public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]
