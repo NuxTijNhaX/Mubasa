@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mubasa.DataAccess.Data;
 
@@ -11,9 +12,10 @@ using Mubasa.DataAccess.Data;
 namespace Mubasa.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230211064356_Delete DefaultAddress Table")]
+    partial class DeleteDefaultAddressTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -649,16 +651,19 @@ namespace Mubasa.DataAccess.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<int?>("AddressId")
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DefaultAddressId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("AddressId")
+                    b.HasIndex("DefaultAddressId")
                         .IsUnique()
-                        .HasFilter("[AddressId] IS NOT NULL");
+                        .HasFilter("[DefaultAddressId] IS NOT NULL");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
@@ -891,7 +896,9 @@ namespace Mubasa.DataAccess.Migrations
                 {
                     b.HasOne("Mubasa.Models.Address", "Address")
                         .WithOne("ApplicationUser")
-                        .HasForeignKey("Mubasa.Models.ApplicationUser", "AddressId");
+                        .HasForeignKey("Mubasa.Models.ApplicationUser", "DefaultAddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Address");
                 });

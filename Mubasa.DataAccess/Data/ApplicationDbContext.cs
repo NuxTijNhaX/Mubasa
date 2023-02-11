@@ -12,7 +12,7 @@ namespace Mubasa.DataAccess.Data
         }
 
         public DbSet<Address> Addresses { get; set; }
-        public DbSet<DefaultAddress> DefaultAddresses { get; set; }
+        // public DbSet<DefaultAddress> DefaultAddresses { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Ward> Wards { get; set; }
