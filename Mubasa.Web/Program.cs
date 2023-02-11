@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Mubasa.Utility;
 using Mubasa.Utility.ThirdParties.Carrier;
+using Mubasa.Utility.ThirdParties.PaymentGateway;
+using Mubasa.Web.Functionality.EmailSender;
 
 namespace Mubasa.Web
 {
@@ -41,6 +43,12 @@ namespace Mubasa.Web
 
             builder.Services.Configure<GiaoHangNhanh>(
                 builder.Configuration.GetSection("GiaoHangNhanh"));
+            builder.Services.Configure<ZaloPay>(
+                builder.Configuration.GetSection("ZaloPay"));
+            builder.Services.Configure<MoMo>(
+                builder.Configuration.GetSection("MoMo"));
+            builder.Services.Configure<MailGun>(
+                builder.Configuration.GetSection("MailGun"));
 
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
@@ -56,6 +64,14 @@ namespace Mubasa.Web
                 options.LoginPath = $"/Identity/Account/Login";
                 options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
+
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(1200);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
             });
 
             builder.Services.AddSingleton<IEmailSender, EmailSender>();
@@ -82,6 +98,8 @@ namespace Mubasa.Web
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.MapRazorPages();
 

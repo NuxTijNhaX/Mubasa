@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -11,12 +12,20 @@ namespace Mubasa.Models
     public class Address
     {
         public int Id { get; set; }
+
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string ReceiverName { get; set; }
+        [Required]
         public string PhoneNumber { get; set; }
 
         [NotMapped]
         public string FullAddress { get; set; }
+        [NotMapped]
+        public bool IsDefault { get; set; }
+
+        [Required]
         public string HomeNumber { get; set; }
 
         public int WardId { get; set; }

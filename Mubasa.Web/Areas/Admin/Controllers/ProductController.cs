@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
@@ -14,6 +15,7 @@ using System.Drawing.Imaging;
 namespace Mubasa.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(SD.Role_Admin)]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _db;

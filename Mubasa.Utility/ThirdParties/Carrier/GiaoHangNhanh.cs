@@ -17,24 +17,24 @@ namespace Mubasa.Utility.ThirdParties.Carrier
         public string DistrictId { get; set; }
         public string WardId { get; set; }
 
-        //public async Task<IEnumerable<dynamic>?> GetAddress(string path)
-        //{
-        //    using HttpClient httpClient = new HttpClient();
-        //    using HttpRequestMessage requestMsg = new HttpRequestMessage();
-        //    requestMsg.Method = HttpMethod.Get;
-        //    requestMsg.RequestUri = new Uri($"{EndPoint}/master-data/{path}");
-        //    requestMsg.Headers.Add("Accept", "application/json");
-        //    requestMsg.Headers.Add("Token", Token);
+        public async Task<IEnumerable<dynamic>?> GetAddress(string path)
+        {
+            using HttpClient httpClient = new HttpClient();
+            using HttpRequestMessage requestMsg = new HttpRequestMessage();
+            requestMsg.Method = HttpMethod.Get;
+            requestMsg.RequestUri = new Uri($"{EndPoint}/master-data/{path}");
+            requestMsg.Headers.Add("Accept", "application/json");
+            requestMsg.Headers.Add("Token", Token);
 
-        //    HttpResponseMessage response = await httpClient.SendAsync(requestMsg);
+            HttpResponseMessage response = await httpClient.SendAsync(requestMsg);
 
-        //    string provinceJSON = await response.Content.ReadAsStringAsync();
+            string provinceJSON = await response.Content.ReadAsStringAsync();
 
-        //    JObject provinceObj = JObject.Parse(provinceJSON);
-        //    IEnumerable<dynamic>? provinceData = provinceObj["data"]?.Children().ToList().Cast<dynamic>();
+            JObject provinceObj = JObject.Parse(provinceJSON);
+            IEnumerable<dynamic>? provinceData = provinceObj["data"]?.Children().ToList().Cast<dynamic>();
 
-        //    return provinceData;
-        //}
+            return provinceData;
+        }
 
         public async Task<IEnumerable<dynamic>?> GetService(string toDistrict)
         {

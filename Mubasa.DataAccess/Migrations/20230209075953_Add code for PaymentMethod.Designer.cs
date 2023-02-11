@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mubasa.DataAccess.Data;
 
@@ -11,9 +12,10 @@ using Mubasa.DataAccess.Data;
 namespace Mubasa.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230209075953_Add code for PaymentMethod")]
+    partial class AddcodeforPaymentMethod
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,7 +238,7 @@ namespace Mubasa.DataAccess.Migrations
 
                     b.Property<string>("ApplicationUserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("DistrictId")
                         .HasColumnType("int");
@@ -264,6 +266,8 @@ namespace Mubasa.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("DistrictId");
 
@@ -323,6 +327,30 @@ namespace Mubasa.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CoverTypes");
+                });
+
+            modelBuilder.Entity("Mubasa.Models.DefaultAddress", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("DefaultAddresses", "Address");
                 });
 
             modelBuilder.Entity("Mubasa.Models.District", b =>
@@ -649,16 +677,14 @@ namespace Mubasa.DataAccess.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<int?>("AddressId")
+                    b.Property<int>("DefaultAddressId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("AddressId")
-                        .IsUnique()
-                        .HasFilter("[AddressId] IS NOT NULL");
+                    b.HasIndex("DefaultAddressId");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
@@ -716,6 +742,12 @@ namespace Mubasa.DataAccess.Migrations
 
             modelBuilder.Entity("Mubasa.Models.Address", b =>
                 {
+                    b.HasOne("Mubasa.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Mubasa.Models.District", "District")
                         .WithMany()
                         .HasForeignKey("DistrictId")
@@ -734,11 +766,32 @@ namespace Mubasa.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("ApplicationUser");
+
                     b.Navigation("District");
 
                     b.Navigation("Province");
 
                     b.Navigation("Ward");
+                });
+
+            modelBuilder.Entity("Mubasa.Models.DefaultAddress", b =>
+                {
+                    b.HasOne("Mubasa.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mubasa.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("Mubasa.Models.District", b =>
@@ -889,17 +942,13 @@ namespace Mubasa.DataAccess.Migrations
 
             modelBuilder.Entity("Mubasa.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("Mubasa.Models.Address", "Address")
-                        .WithOne("ApplicationUser")
-                        .HasForeignKey("Mubasa.Models.ApplicationUser", "AddressId");
-
-                    b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("Mubasa.Models.Address", b =>
-                {
-                    b.Navigation("ApplicationUser")
+                    b.HasOne("Mubasa.Models.DefaultAddress", "DefaultAddress")
+                        .WithMany()
+                        .HasForeignKey("DefaultAddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("DefaultAddress");
                 });
 #pragma warning restore 612, 618
         }

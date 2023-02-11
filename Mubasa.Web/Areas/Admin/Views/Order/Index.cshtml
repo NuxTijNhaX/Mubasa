@@ -1,0 +1,133 @@
+﻿@using Mubasa.Utility;
+@model IEnumerable<Mubasa.Models.OrderHeader>
+
+@{
+    ViewData["Title"] = "Index";
+
+    string status = Context.Request.Query["status"].ToString();
+    status = status != "" ? status : SD.OrderPending;
+
+    string active = "btn-danger";
+    string non_active = "btn-outline-secondary border border-1";
+
+    Dictionary<string, string> states = new Dictionary<string, string>(6)
+    {
+        {SD.OrderPending, non_active},
+        {SD.OrderProcessing, non_active},
+        {SD.OrderShipping, non_active},
+        {SD.OrderCompleted, non_active},
+        {SD.OrderCancelled, non_active},
+        {SD.OrderAll, non_active},
+    };
+
+    states[status] = active;
+}
+
+<div class="title-container d-flex justify-content-between p-3">
+    <div class="title">
+        <h1>Order</h1>
+    </div>
+    <div class="order-state d-flex">
+        <div>
+            <a class="btn @states[SD.OrderPending]" asp-route-status="@SD.OrderPending" asp-controller="Order" asp-action="Index">
+                Pending
+            </a>
+        </div>
+        <div>
+            <a class="btn @states[SD.OrderProcessing]" asp-route-status="@SD.OrderProcessing" asp-controller="Order" asp-action="Index">
+                Processing
+            </a>
+        </div>
+        <div>
+            <a class="btn @states[SD.OrderShipping]" asp-route-status="@SD.OrderShipping" asp-controller="Order" asp-action="Index">
+               Shipping
+            </a>
+        </div>
+        <div>
+            <a class="btn @states[SD.OrderCompleted]" asp-route-status="@SD.OrderCompleted" asp-controller="Order" asp-action="Index">
+               Completed
+            </a>
+        </div>
+        <div>
+            <a class="btn @states[SD.OrderCancelled]" asp-route-status="@SD.OrderCancelled" asp-controller="Order" asp-action="Index">
+                Cancelled
+            </a>
+        </div>
+        <div>
+            <a class="btn @states[SD.OrderAll]" asp-route-status="@SD.OrderAll" asp-controller="Order" asp-action="Index">
+                All
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Người nhận
+            </th>
+            <th>
+                SĐT
+            </th>
+            <th>
+                Trạng thái
+            </th>
+            <th>
+                Thanh toán
+            </th>
+            <th>
+                Ngày đặt
+            </th>
+            <th>
+                Tỉnh/Thành phố
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @item.Id
+                </td>
+                <td>
+                    @item.ReceiverName
+                </td>
+                <td>
+                    @item.ReceiverPhoneNumber
+                </td>
+                <td>
+                    @item.OrderStatus
+                </td>
+                <td>
+                    @item.PaymentStatus
+                </td>
+                <td>
+                    @item.CreatedDate.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    @item.Province.Name
+                </td>
+                <td class="d-flex justify-content-end gap-1">
+                    <a class="btn btn-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-square" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+                        </svg>
+                        Next
+                    </a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
+                        </svg>
+                        Detail
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

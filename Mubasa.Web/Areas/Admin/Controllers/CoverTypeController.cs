@@ -5,10 +5,12 @@ using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
 using Mubasa.Web.Areas.Customer.Controllers;
 using Mubasa.Utility;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Mubasa.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(SD.Role_Admin)]
     public class CoverTypeController : Controller
     {
         private readonly IUnitOfWork _db;
