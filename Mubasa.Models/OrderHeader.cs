@@ -41,6 +41,8 @@ namespace Mubasa.Models
         public int PaymentMethodId { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
 
+        // public string PartnerPaymentId { get; set; } = "-1";
+
         public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]
         public ApplicationUser ApplicationUser { get; set; }
