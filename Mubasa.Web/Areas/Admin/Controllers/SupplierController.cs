@@ -10,7 +10,7 @@ using Mubasa.Web.Areas.Customer.Controllers;
 namespace Mubasa.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_Admin)]
     public class SupplierController : Controller
     {
         private readonly IUnitOfWork _db;

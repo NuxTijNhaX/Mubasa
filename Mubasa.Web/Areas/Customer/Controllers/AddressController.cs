@@ -75,38 +75,15 @@ namespace Mubasa.Web.Areas.Customer.Controllers
                     return NotFound();
                 }
 
-                var province = _db.Province.GetFirstOrDefault(
-                    i => i.Name == address.Province.Name);
+                address.ApplicationUserId = claim.Value;
 
-                var district = _db.District.GetFirstOrDefault(
-                    i => i.Name == address.District.Name &&
-                        i.ProvinceId == province.Id);
+                _db.Address.Add(address);
+                _db.Save();
 
-                var ward = _db.Ward.GetFirstOrDefault(
-                    i => i.Name == address.Ward.Name &&
-                        i.DistrictId == district.Id);
+                TempData["success"] = "Thêm địa chỉ thành công";
 
-                if (province.Id != 0 &&
-                    district.Id != 0 &&
-                    ward.Id != 0)
-                {
-                    address.ProvinceId = province.Id;
-                    address.Province = null;
-                    address.DistrictId = district.Id;
-                    address.District = null;
-                    address.WardId = ward.Id;
-                    address.Ward = null;
-                    address.ApplicationUserId = claim.Value;
+                return RedirectToAction(nameof(Index));
 
-                    _db.Address.Add(address);
-                    _db.Save();
-
-                    TempData["success"] = "Thêm địa chỉ thành công";
-
-                    return RedirectToAction(nameof(Index));
-                }
-
-                return View();
             }
             catch
             {
@@ -117,17 +94,30 @@ namespace Mubasa.Web.Areas.Customer.Controllers
         // GET: AddressController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var address = _db.Address.GetFirstOrDefault(i => i.Id == id, 
+                includeProp: "Ward,District,Province");
+
+            return View(address);
         }
 
         // POST: AddressController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Address address)
         {
             try
             {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                
+                address.ApplicationUserId = claim.Value;
+
+                _db.Address.Update(address);
+                _db.Save();
+
+                TempData["success"] = "Cập nhật thành công";
                 return RedirectToAction(nameof(Index));
+
             }
             catch
             {
@@ -159,39 +149,72 @@ namespace Mubasa.Web.Areas.Customer.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult>LoadAddress(string type, int? id)
+        public IActionResult GetProvince()
         {
             try
             {
-                GiaoHangNhanh GHN = new GiaoHangNhanh()
-                {
-                    EndPoint = _ghn.Value.EndPoint,
-                    Token = _ghn.Value.Token
-                };
+                var province = _db.Province.GetAll();
 
-                IEnumerable<dynamic>? addressData;
-
-                switch (type)
-                {
-                    case "province":
-                        addressData = await GHN.GetAddress($"province");
-                        break;
-                    case "district":
-                        addressData = await GHN.GetAddress($"district?province_id={id}");
-                        break;
-                    case "ward":
-                        addressData = await GHN.GetAddress($"ward?district_id={id}");
-                        break;
-                    default:
-                        return Json(new { success = false, data = "Not Found" });
-                }
-
-                return Json(new { success = true, data = JsonObject.Parse(addressData.ToJson()) });
+                return Json(new { success = true, data = JsonObject.Parse(province.ToJson()) });
             }
             catch (Exception)
             {
                 return Json(new { success = false, data = $"Something went wrong" });
             }
         }
+
+        [HttpGet]
+        public IActionResult GetDistrict(int province_id)
+        {
+            try
+            {
+                var district = _db.District.GetAll(i => i.ProvinceId == province_id);
+
+                return Json(new { success = true, data = JsonObject.Parse(district.ToJson()) });
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false, data = $"Something went wrong" });
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetWard(int district_id)
+        {
+            try
+            {
+                var ward = _db.Ward.GetAll(i => i.DistrictId == district_id);
+
+                return Json(new { success = true, data = JsonObject.Parse(ward.ToJson()) });
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false, data = $"Something went wrong" });
+            }
+        }
+        
+        public IActionResult SetDefault(int address_id)
+        {
+            try
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+                var user = _db.ApplicationUser.GetFirstOrDefault(i => i.Id == claim.Value);
+                user.AddressId = address_id;
+                _db.Save();
+
+                TempData["success"] = "Đã thêm vào địa chỉ mặc định";
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+
+                return View();
+            }
+            
+        }
+        
     }
 }

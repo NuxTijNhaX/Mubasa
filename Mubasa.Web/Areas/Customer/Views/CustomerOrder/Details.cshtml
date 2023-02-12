@@ -48,7 +48,6 @@
                 </div>
             </div>
             <!-- Shipping address end -->
-
             <!-- Checking Again start -->
             <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
                 <h1 class="fs-3">Checking Again</h1>
@@ -60,18 +59,27 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="row">
-                                    <a class="col-4 text-center pointer" asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-productId="@item.Product.Id">
+                                    <a class="col-4 text-center pointer" asp-controller="Home" asp-action="Details" asp-route-productId="@item.Product.Id">
                                         <img src="@item.Product.ImgUrl" width="120" />
                                     </a>
-                                    <div class="col-8">
-                                        <a class="pointer text-decoration-none" asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-productId="@item.Product.Id">
-                                            <span class="fw-bold fs-5">@item.Product.Name</span>
+                                    <div class="col-8 d-flex flex-column justify-content-between">
+                                        <a class="pointer text-decoration-none" asp-controller="Home" asp-action="Details" asp-route-productId="@item.Product.Id">
+                                            <span class="fw-bold">@item.Product.Name</span>
                                         </a>
+                                        <span class="product-price fw-bold">@item.Product.Price.ToString("C", new CultureInfo("vi-VN"))</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-4 d-flex justify-content-center align-items-center">
-                                <span class="fs-3 fw-bold">@item.Quantity</span>
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <span>@item.Quantity</span>
+                            </div>
+                            <div class="col-3 d-flex justify-content-center align-items-center">
+                                <span class="product-price-quantity fw-bold text-danger fs-5">
+                                    @{
+                                        var subTotal = (item.UnitPrice * item.Quantity).ToString("C", new CultureInfo("vi-VN"));
+                                    }
+                                    @subTotal
+                                </span>
                             </div>
                         </div>
                         @if (!item.Equals(last))
@@ -88,55 +96,28 @@
             <h1 class="fs-3 text-center">Status: @Model.OrderHeader.OrderStatus</h1>
             <hr />
             <div class="pb-3 d-flex flex-column gap-2 ">
-                @if(Model.OrderHeader.OrderStatus == SD.OrderPending)
+                @if(Model.OrderHeader.OrderStatus == SD.OrderWait4Pay)
                 {
-                    <a asp-action="UpdateOrderStatus" asp-route-orderId="@Model.OrderHeader.Id" asp-route-status="@SD.OrderProcessing" class="btn btn-info w-100 py-3 fw-bold fs-5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-box-seam-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.01-.003.268-.108a.75.75 0 0 1 .558 0l.269.108.01.003 6.97 2.789ZM10.404 2 4.25 4.461 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339L8 5.961 5.596 5l6.154-2.461L10.404 2Z" />
+                    <a asp-action="PayOrder" asp-route-orderId="@Model.OrderHeader.Id" asp-route-status="@SD.OrderCancelled" class="btn btn-success w-100 py-3 fw-bold fs-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-credit-card-fill" viewBox="0 0 16 16">
+                          <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4zm0 3v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7H0zm3 2h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/>
                         </svg>
-                        Process
+                        Pay Now
                     </a>
                 }
-                @if(Model.OrderHeader.OrderStatus == SD.OrderProcessing)
-                {
-                    <a asp-action="UpdateOrderStatus" asp-route-orderId="@Model.OrderHeader.Id" asp-route-status="@SD.OrderShipping" class="btn btn-warning w-100 py-3 fw-bold fs-5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
-                          <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-                        </svg>
-                        Ship
-                    </a>    
-                }
-                @if(Model.OrderHeader.OrderStatus == SD.OrderShipping)
-                {
-                    <a asp-action="UpdateOrderStatus" asp-route-orderId="@Model.OrderHeader.Id" asp-route-status="@SD.OrderCompleted" class="btn btn-success w-100 py-3 fw-bold fs-5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-                        </svg>
-                        Complete
-                    </a>    
-                }
-                @if (Model.OrderHeader.OrderStatus == SD.OrderCompleted)
-                {
-                    <a asp-action="UpdateOrderStatus" asp-route-orderId="@Model.OrderHeader.Id" asp-route-status="@SD.OrderReturned" class="btn btn-danger w-100 py-3 fw-bold fs-5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
-                          <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"/>
-                        </svg>
-                        Return
-                    </a>
-                }
-                @if (acceptedCancelStatus.Contains(Model.OrderHeader.OrderStatus??""))
+                @if (acceptedCancelStatus.Contains(Model.OrderHeader.OrderStatus?? ""))
                 {
                     <a asp-action="UpdateOrderStatus" asp-route-orderId="@Model.OrderHeader.Id" asp-route-status="@SD.OrderCancelled" class="btn btn-danger w-100 py-3 fw-bold fs-5">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-octagon-fill" viewBox="0 0 16 16">
                             <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z" />
                         </svg>
                         Cancel
-                    </a>    
+                    </a>
                 }
                 <hr />
                 <a asp-action="Index" class="btn btn-primary w-100 py-3 fw-bold fs-5">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16">
-                      <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z" />
                     </svg>
                     Back to List
                 </a>
