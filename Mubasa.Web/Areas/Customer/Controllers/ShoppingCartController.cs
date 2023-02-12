@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Mubasa.DataAccess.Repository.IRepository;
@@ -11,14 +9,7 @@ using Mubasa.Utility;
 using Mubasa.Utility.ThirdParties.Carrier;
 using Mubasa.Utility.ThirdParties.PaymentGateway;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using NuGet.ProjectModel;
-using NuGet.Protocol;
-using System;
-using System.IO;
-using System.Net;
 using System.Security.Claims;
-using System.Text.Json.Nodes;
 
 namespace Mubasa.Web.Areas.Customer.Controllers
 {
@@ -242,8 +233,7 @@ namespace Mubasa.Web.Areas.Customer.Controllers
 
             if (paymentMethod.Code == SD.PayMethod_COD)
             {
-                _db.ShoppingItem.RemoveRange(checkoutVM.ShoppingCartVM.ShoppingCart);
-                _db.Save();
+                DeleteShoppingCart(checkoutVM.OrderHeader.ApplicationUserId);
             }
             else
             {
@@ -281,9 +271,14 @@ namespace Mubasa.Web.Areas.Customer.Controllers
                     if (resultCode == 0)
                     {
                         var payUrl = momoResponse["payUrl"];
+
+                        DeleteShoppingCart(checkoutVM.OrderHeader.ApplicationUserId);
+                        _db.Save();
+
                         return Redirect(payUrl);
                     }
                 }
+
             }
 
             return RedirectToAction("Index", "Home");
@@ -299,15 +294,22 @@ namespace Mubasa.Web.Areas.Customer.Controllers
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-                var shoppingCart = _db.ShoppingItem.GetFirstOrDefault(i => i.ProductId == id && claim.Value == i.ApplicationUserId);
+                var shoppingItem = _db.ShoppingItem.GetFirstOrDefault(i => i.ProductId == id && claim.Value == i.ApplicationUserId);
 
-                if (shoppingCart == null)
+                if (shoppingItem == null)
                 {
                     return Json(new { success = false, message = $"{_localizer["Not Found"]}" });
                 }
 
-                _db.ShoppingItem.Remove(shoppingCart);
+                _db.ShoppingItem.Remove(shoppingItem);
                 _db.Save();
+
+                HttpContext.Session.SetInt32(
+                    SD.SessionCart,
+                    _db.ShoppingItem
+                        .GetAll(i => i.ApplicationUserId == claim.Value)
+                        .ToList()
+                        .Count);
 
                 return Json(new { success = true, message = $"{_localizer["Delete Successful"]}" });
             }
@@ -317,14 +319,19 @@ namespace Mubasa.Web.Areas.Customer.Controllers
             }
         }
         
-        public IActionResult SuccessfulPayment(int orderId, string paymentName, string userId)
+        public IActionResult SuccessfulPayment(
+            int orderId, 
+            string paymentName, 
+            string userId)
         {
             UpdatePaidOrder(orderId, paymentName, userId);
 
             return View();
         }
 
-        public IActionResult UpdateShippingMethod(string serviceId, string serviceTypeId)
+        public IActionResult UpdateShippingMethod(
+            string serviceId, 
+            string serviceTypeId)
         {
             TempData["ServiceId"] = serviceId;
             TempData["ServiceTypeId"] = serviceTypeId;
@@ -419,8 +426,8 @@ namespace Mubasa.Web.Areas.Customer.Controllers
             orderHeader.PaymentStatus = SD.PaymentPaid;
             orderHeader.PaymentedDate = DateTime.Now;
 
-            var shoppingCart = _db.ShoppingItem.GetAll(i => i.ApplicationUserId == appuserId);
-            _db.ShoppingItem.RemoveRange(shoppingCart);
+            DeleteShoppingCart(appuserId);
+
             _db.Save();
         }
     
@@ -450,6 +457,16 @@ namespace Mubasa.Web.Areas.Customer.Controllers
             }
 
             return NotFound();
+        }
+    
+        private void DeleteShoppingCart(string appuserId)
+        {
+            var shoppingCart = _db.ShoppingItem.GetAll(i => i.ApplicationUserId == appuserId);
+            _db.ShoppingItem.RemoveRange(shoppingCart);
+
+            HttpContext.Session.Clear();
+
+            _db.Save();
         }
     }
 }

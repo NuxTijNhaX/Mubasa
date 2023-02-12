@@ -28,28 +28,25 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Province.Name" class="control-label">Province/City</label>
-                <select id="province-selector" class="form-select">
+                <label asp-for="ProvinceId" class="control-label">Province/City</label>
+                <select asp-for="ProvinceId" id="province-selector" class="form-select">
                     <option selected disabled>--- Sellect Province/City ---</option>
                 </select>
-                <input id="province-name" asp-for="Province.Name" hidden />
-                <span asp-validation-for="Province.Name" class="text-danger"></span>
+                <span asp-validation-for="ProvinceId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="District.Name" class="control-label">District</label>
-                <select id="district-selector" class="form-select">
+                <label asp-for="DistrictId" class="control-label">District</label>
+                <select asp-for ="DistrictId" id="district-selector" class="form-select">
                     <option selected disabled>--- Select District ---</option>
                 </select>
-                <input id="district-name" asp-for="District.Name" hidden />
-                <span asp-validation-for="District.Name" class="text-danger"></span>
+                <span asp-validation-for="DistrictId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Ward.Name" class="control-label">Ward</label>
-                <select id="ward-selector" class="form-select">
+                <label asp-for="WardId" class="control-label">Ward</label>
+                <select asp-for="WardId" id="ward-selector" class="form-select">
                     <option selected disabled>--- Select Ward ---</option>
                 </select>
-                <input id="ward-name" asp-for="Ward.Name" hidden />
-                <span asp-validation-for="Ward.Name" class="text-danger"></span>
+                <span asp-validation-for="WardId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="HomeNumber" class="control-label">Home Number</label>
@@ -82,7 +79,7 @@
     <script>
         async function fetchAddress(path) {
             const host = window.location.host;
-            let response = await fetch(`https://${host}/Customer/Address/LoadAddress?type=${path}`, {
+            let response = await fetch(`https://${host}/Customer/Address/${path}`, {
                 method: 'GET',
             });
 
@@ -90,29 +87,22 @@
             return await result.data;
         }
 
-        function assignValue(type, value) {
-            const selector = document.getElementById(`${type}-selector`);
-            const input = document.getElementById(`${type}-name`);
-
-            input.value = selector.options[selector.selectedIndex].text;
-        }
-
         async function loadProvince() {
             const province = document.getElementById("province-selector");
-            const provinceData = await fetchAddress("province");
-            createOption(provinceData, province, "ProvinceID", "ProvinceName");
+            const provinceData = await fetchAddress("getprovince");
+            createOption(provinceData, province, "Id", "Name");
         }
         async function loadDistrict(provinceId) {
             const district = document.getElementById("district-selector");
             district.replaceChildren();
-            const districtData = await fetchAddress(`district&id=${provinceId}`);
-            createOption(districtData, district, "DistrictID", "DistrictName");
+            const districtData = await fetchAddress(`getdistrict?province_id=${provinceId}`);
+            createOption(districtData, district, "Id", "Name");
         }
         async function loadWard(districtId) {
             const ward = document.getElementById("ward-selector");
             ward.replaceChildren();
-            const wardData = await fetchAddress(`ward&id=${districtId}`);
-            createOption(wardData, ward, "WardCode", "WardName");
+            const wardData = await fetchAddress(`getward?district_id=${districtId}`);
+            createOption(wardData, ward, "Id", "Name");
         }
         function createOption(data, parent, value, text) {
             data.map(i => {
@@ -126,17 +116,11 @@
             loadProvince();
             const province = document.getElementById("province-selector");
             const district = document.getElementById("district-selector");
-            const ward = document.getElementById("ward-selector");
             province.addEventListener("change", function () {
                 loadDistrict(this.value);
-                assignValue("province", province.textContent);
             })
             district.addEventListener("change", function () {
                 loadWard(this.value);
-                assignValue("district");
-            })
-            ward.addEventListener("change", function () {
-                assignValue("ward", this.textContent);
             })
         }
         window.addEventListener('load', intialEvent);

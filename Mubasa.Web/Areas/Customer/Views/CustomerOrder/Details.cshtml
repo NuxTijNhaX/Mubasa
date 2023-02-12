@@ -1,0 +1,151 @@
+﻿@using Microsoft.Extensions.Localization;
+@using Mubasa.Utility;
+@using Mubasa.Web.Areas.Customer.Controllers;
+@using System.Globalization;
+@inject IStringLocalizer<HomeController> homeLocalizer;
+
+@model Mubasa.Models.ViewModels.OrderDetailVM;
+
+@{
+    ViewData["Title"] = $"Chi tiết đơn hàng #{Model.OrderHeader.Id}";
+
+    List<string> acceptedCancelStatus = new List<string>()
+    {
+        SD.OrderPending,
+        SD.OrderProcessing,
+        SD.OrderWait4Pay
+    };
+}
+
+<h1>Chi tiết đơn hàng #@Model.OrderHeader.Id</h1>
+
+<form method="post">
+    <div class="row">
+        <div class="col-9">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Shipping address start -->
+            <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
+                <h1 class="fs-3">Shipping Address</h1>
+                <hr />
+                <div class="row p-2">
+                    <label asp-for="OrderHeader.ReceiverName" class="col-3">
+                        @homeLocalizer["Full name of recipient"]:
+                    </label>
+                    <input disabled asp-for="OrderHeader.ReceiverName" class="form-control w-50" />
+                </div>
+                <div class="row p-2">
+                    <label asp-for="OrderHeader.ReceiverPhoneNumber" class="col-3">
+                        @homeLocalizer["Phone number"]:
+                    </label>
+                    <input disabled asp-for="OrderHeader.ReceiverPhoneNumber" type="number" class="col-6 rounded py-1 form-control w-50" />
+                </div>
+                <div class="row p-2">
+                    <label class="col-3">
+                        @homeLocalizer["Shipping Address"]:
+                    </label>
+                    <textarea disabled class="col-6 rounded py-1 form-control w-50" style="resize: none;">@Model.OrderHeader.ShippingAddress, @Model.OrderHeader.Ward.Name, @Model.OrderHeader.District.Name, @Model.OrderHeader.Province.Name</textarea>
+                </div>
+            </div>
+            <!-- Shipping address end -->
+            <!-- Checking Again start -->
+            <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
+                <h1 class="fs-3">Checking Again</h1>
+                <hr />
+                @{
+                    var last = Model.OrderDetails.Last();
+                    @foreach (var item in Model.OrderDetails)
+                    {
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="row">
+                                    <a class="col-4 text-center pointer" asp-controller="Home" asp-action="Details" asp-route-productId="@item.Product.Id">
+                                        <img src="@item.Product.ImgUrl" width="120" />
+                                    </a>
+                                    <div class="col-8 d-flex flex-column justify-content-between">
+                                        <a class="pointer text-decoration-none" asp-controller="Home" asp-action="Details" asp-route-productId="@item.Product.Id">
+                                            <span class="fw-bold">@item.Product.Name</span>
+                                        </a>
+                                        <span class="product-price fw-bold">@item.Product.Price.ToString("C", new CultureInfo("vi-VN"))</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <span>@item.Quantity</span>
+                            </div>
+                            <div class="col-3 d-flex justify-content-center align-items-center">
+                                <span class="product-price-quantity fw-bold text-danger fs-5">
+                                    @{
+                                        var subTotal = (item.UnitPrice * item.Quantity).ToString("C", new CultureInfo("vi-VN"));
+                                    }
+                                    @subTotal
+                                </span>
+                            </div>
+                        </div>
+                        @if (!item.Equals(last))
+                        {
+                            <hr class="my-4 w-75 m-auto" />
+                        }
+                    }
+                }
+            </div>
+            <!-- Checking Again end -->
+        </div>
+
+        <div class="w-25 border rounded-3 bg-light shadow-sm p-4 position-fixed top-50 end-0 translate-middle-y me-4">
+            <h1 class="fs-3 text-center">Status: @Model.OrderHeader.OrderStatus</h1>
+            <hr />
+            <div class="pb-3 d-flex flex-column gap-2 ">
+                @if(Model.OrderHeader.OrderStatus == SD.OrderWait4Pay)
+                {
+                    <a asp-action="PayOrder" asp-route-orderId="@Model.OrderHeader.Id" asp-route-status="@SD.OrderCancelled" class="btn btn-success w-100 py-3 fw-bold fs-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-credit-card-fill" viewBox="0 0 16 16">
+                          <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4zm0 3v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7H0zm3 2h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        Pay Now
+                    </a>
+                }
+                @if (acceptedCancelStatus.Contains(Model.OrderHeader.OrderStatus?? ""))
+                {
+                    <a asp-action="UpdateOrderStatus" asp-route-orderId="@Model.OrderHeader.Id" asp-route-status="@SD.OrderCancelled" class="btn btn-danger w-100 py-3 fw-bold fs-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-octagon-fill" viewBox="0 0 16 16">
+                            <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z" />
+                        </svg>
+                        Cancel
+                    </a>
+                }
+                <hr />
+                <a asp-action="Index" class="btn btn-primary w-100 py-3 fw-bold fs-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z" />
+                    </svg>
+                    Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        async function updateShipMethod(service_id, service_type_id) {
+            const host = window.location.host;
+            const uri = `https://${host}/Customer/ShoppingCart/UpdateShippingMethod?serviceId=${service_id}&serviceTypeId=${service_type_id}`;
+            await fetch(uri, {
+                method: 'GET',
+            });
+
+            window.location.reload();
+        }
+
+        async function updatePaymentMethod(id) {
+            const host = window.location.host;
+            const uri = `https://${host}/Customer/ShoppingCart/UpdatePaymentMethod?id=${id}`;
+            await fetch(uri, {
+                method: 'GET',
+            });
+
+            window.location.reload();
+        }
+    </script>
+}

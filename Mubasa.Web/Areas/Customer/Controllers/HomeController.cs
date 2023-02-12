@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
+using Mubasa.Utility;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -54,12 +55,20 @@ namespace Mubasa.Web.Areas.Customer.Controllers
             {
                 shoppingItemDb.Count += shoppingItem.Count;
                 _db.ShoppingItem.Update(shoppingItemDb);
-            } else
+                _db.Save();
+            }
+            else
             {
                 _db.ShoppingItem.Add(shoppingItem);
+                _db.Save();
+
+                HttpContext.Session.SetInt32(
+                    SD.SessionCart,
+                    _db.ShoppingItem
+                        .GetAll(i => i.ApplicationUserId == claim.Value)
+                        .ToList()
+                        .Count);
             }
-            
-            _db.Save();
 
             return RedirectToAction("Index");
         }
@@ -70,7 +79,6 @@ namespace Mubasa.Web.Areas.Customer.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [HttpPost]
         public IActionResult ChangeLanguage(string culture, string returnUrl)
         {
             Response.Cookies.Append(
