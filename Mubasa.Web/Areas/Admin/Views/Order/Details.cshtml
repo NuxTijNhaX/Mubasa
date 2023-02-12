@@ -8,6 +8,13 @@
 
 @{
     ViewData["Title"] = $"Chi tiết đơn hàng #{Model.OrderHeader.Id}";
+
+    List<string> acceptedCancelStatus = new List<string>()
+    {
+        SD.OrderPending,
+        SD.OrderProcessing,
+        SD.OrderWait4Pay
+    };
 }
 
 <h1>Chi tiết đơn hàng #@Model.OrderHeader.Id</h1>
@@ -117,7 +124,7 @@
                         Return
                     </a>
                 }
-                @if (Model.OrderHeader.OrderStatus != SD.OrderCompleted && Model.OrderHeader.OrderStatus != SD.OrderReturned)
+                @if (acceptedCancelStatus.Contains(Model.OrderHeader.OrderStatus??""))
                 {
                     <a asp-action="UpdateOrderStatus" asp-route-orderId="@Model.OrderHeader.Id" asp-route-status="@SD.OrderCancelled" class="btn btn-danger w-100 py-3 fw-bold fs-5">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-octagon-fill" viewBox="0 0 16 16">
