@@ -56,8 +56,22 @@ namespace Mubasa.Web
                 options => options.UseSqlServer(
                     builder.Configuration.GetConnectionString("Default")));
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultUI();
+
+            builder.Services.AddAuthentication()
+                .AddFacebook(options =>
+                {
+                    options.AppId = builder.Configuration.GetSection("Facebook")["AppId"];
+                    options.AppSecret = builder.Configuration.GetSection("Facebook")["AppSecret"];
+                })
+                .AddGoogle(options =>
+                {
+                    options.ClientId = builder.Configuration.GetSection("Google")["ClientId"]; ;
+                    options.ClientSecret = builder.Configuration.GetSection("Google")["ClientSecret"]; ;
+                });
 
             builder.Services.ConfigureApplicationCookie(options =>
             {

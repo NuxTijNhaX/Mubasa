@@ -27,7 +27,8 @@ namespace Mubasa.Web.ViewComponents
                         SD.SessionCart,
                         _db.ShoppingItem
                             .GetAll(i => i.ApplicationUserId == claim.Value)
-                        .ToList().Count);
+                            .ToList()
+                            .Count);
                 }
 
                 return View(HttpContext.Session.GetInt32(SD.SessionCart));
