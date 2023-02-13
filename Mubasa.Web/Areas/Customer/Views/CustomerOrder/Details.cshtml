@@ -26,7 +26,7 @@
 
             <!-- Shipping address start -->
             <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
-                <h1 class="fs-3">Shipping Address</h1>
+                <h1 class="fs-3">Thông Tin</h1>
                 <hr />
                 <div class="row p-2">
                     <label asp-for="OrderHeader.ReceiverName" class="col-3">
@@ -45,6 +45,36 @@
                         @homeLocalizer["Shipping Address"]:
                     </label>
                     <textarea disabled class="col-6 rounded py-1 form-control w-50" style="resize: none;">@Model.OrderHeader.ShippingAddress, @Model.OrderHeader.Ward.Name, @Model.OrderHeader.District.Name, @Model.OrderHeader.Province.Name</textarea>
+                </div>
+                <div class="row p-2">
+                    <label asp-for="OrderHeader.PaymentMethod.Code" class="col-3">
+                        Payment Method
+                    </label>
+                    <input disabled asp-for="OrderHeader.PaymentMethod.Code" class="col-6 rounded py-1 form-control w-50" />
+                </div>
+                <div class="row p-2">
+                    <label class="col-3">
+                        Sub Total
+                    </label>
+                    <input disabled value="@Model.SubTotal.ToString("c", new CultureInfo("vi-VN"))" class="col-6 rounded py-1 form-control w-50" />
+                </div>
+                <div class="row p-2">
+                    <label class="col-3">
+                        Shipping Cost
+                    </label>
+                    <input disabled value="@Model.OrderHeader.ShippingCost.ToString("c", new CultureInfo("vi-VN"))" class="col-6 rounded py-1 form-control w-50" />
+                </div>
+                <div class="row p-2">
+                    <label class="col-3">
+                        Discount
+                    </label>
+                    <input disabled value="@Model.OrderHeader.Discount.ToString("c", new CultureInfo("vi-VN"))" class="col-6 rounded py-1 form-control w-50" />
+                </div>
+                <div class="row p-2">
+                    <label class="col-3 fw-bold">
+                        Grand Total
+                    </label>
+                    <input disabled value="@Model.OrderHeader.GrandTotal.ToString("c", new CultureInfo("vi-VN"))" class="col-6 rounded py-1 form-control w-50 fw-bold" />
                 </div>
             </div>
             <!-- Shipping address end -->
@@ -98,7 +128,7 @@
             <div class="pb-3 d-flex flex-column gap-2 ">
                 @if(Model.OrderHeader.OrderStatus == SD.OrderWait4Pay)
                 {
-                    <a asp-action="PayOrder" asp-route-orderId="@Model.OrderHeader.Id" asp-route-status="@SD.OrderCancelled" class="btn btn-success w-100 py-3 fw-bold fs-5">
+                    <a asp-action="PayOrder" asp-route-orderId="@Model.OrderHeader.Id" class="btn btn-success w-100 py-3 fw-bold fs-5">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-credit-card-fill" viewBox="0 0 16 16">
                           <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4zm0 3v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7H0zm3 2h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/>
                         </svg>

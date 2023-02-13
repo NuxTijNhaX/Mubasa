@@ -5,7 +5,7 @@
     ViewData["Title"] = "Index";
 
     string status = Context.Request.Query["status"].ToString();
-    status = status != "" ? status : SD.OrderPending;
+    status = status != "" ? status : SD.OrderWait4Pay;
 
     string active = "btn-danger";
     string non_active = "btn-outline-secondary border border-1";
