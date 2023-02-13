@@ -14,7 +14,6 @@ namespace Mubasa.DataAccess.Repository
         private readonly ApplicationDbContext _db;
 
         public IAddressRepository Address { get; private set; }
-        public IDefaultAddressRepository DefaultAddress { get; private set; }
         public IProvinceRepository Province { get; private set; }
         public IDistrictRepository District { get; private set; }
         public IWardRepository Ward { get; private set; }
@@ -37,7 +36,6 @@ namespace Mubasa.DataAccess.Repository
             _db = db;
 
             Address = new AddressRepository(db);
-            DefaultAddress = new DefaultAddressRepository(db);
             Province = new ProvinceRepository(db);
             District = new DistrictRepository(db);
             Ward = new WardRepository(db);
