@@ -6,8 +6,9 @@ using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
 using Mubasa.Models.ViewModels;
 using Mubasa.Utility;
-using Mubasa.Utility.ThirdParties.Carrier;
-using Mubasa.Utility.ThirdParties.PaymentGateway;
+using Mubasa.Web.Services.ThirdParties.Carrier.GiaoHangNhanh;
+using Mubasa.Web.Services.ThirdParties.PaymentGateway.MoMo;
+using Mubasa.Web.Services.ThirdParties.PaymentGateway.ZaloPay;
 using Newtonsoft.Json;
 using System.Security.Claims;
 
@@ -18,24 +19,24 @@ namespace Mubasa.Web.Areas.Customer.Controllers
     {
         private readonly IUnitOfWork _db;
         private readonly IStringLocalizer<HomeController> _localizer;
-        private readonly IOptions<GiaoHangNhanh> _ghn;
-        private readonly IOptions<ZaloPay> _zaloPay;
-        private readonly IOptions<MoMo> _momo;
+        private readonly IOptions<GiaoHangNhanhConfig> _ghnConfig;
+        private readonly IOptions<ZaloPayConfig> _zaloPayConfig;
+        private readonly IOptions<MoMoConfig> _momoConfig;
 
         public CheckoutVM CheckoutVM { get; set; }
 
         public ShoppingCartController(
             IUnitOfWork db, 
             IStringLocalizer<HomeController> localizer, 
-            IOptions<GiaoHangNhanh> ghn,
-            IOptions<ZaloPay> zaloPay,
-            IOptions<MoMo> momo)
+            IOptions<GiaoHangNhanhConfig> ghnConfig,
+            IOptions<ZaloPayConfig> zaloPayConfig,
+            IOptions<MoMoConfig> momoConfig)
         {
             _db = db;
             _localizer = localizer;
-            _ghn = ghn;
-            _zaloPay = zaloPay;
-            _momo = momo;
+            _ghnConfig = ghnConfig;
+            _zaloPayConfig = zaloPayConfig;
+            _momoConfig = momoConfig;
         }
 
         // GET: ShoppingCartController
@@ -87,7 +88,13 @@ namespace Mubasa.Web.Areas.Customer.Controllers
 
             CheckoutVM.ShoppingCartVM.Address = _db.Address.GetFirstOrDefault(i => i.Id == defaultAddressId, "Province,District,Ward");
             CheckoutVM.ShoppingCartVM.Address.FullAddress = $"{CheckoutVM.ShoppingCartVM.Address.HomeNumber}, {CheckoutVM.ShoppingCartVM.Address.Ward.Name}, {CheckoutVM.ShoppingCartVM.Address.District.Name}, {CheckoutVM.ShoppingCartVM.Address.Province.Name}";
+            
             CheckoutVM.ShoppingCartVM.ShoppingCart = _db.ShoppingItem.GetAll(i => i.ApplicationUserId == claim.Value, includeProp: "Product");
+            if(CheckoutVM.ShoppingCartVM.ShoppingCart.Count() == 0)
+            {
+                TempData["info"] = "Giỏ hàng trống!\nThêm hàng vào giỏ ngay thôi!";
+                return RedirectToAction(nameof(Index));
+            }
 
             try
             {
@@ -124,7 +131,7 @@ namespace Mubasa.Web.Areas.Customer.Controllers
 
             if (!(TempData.ContainsKey("ServiceId") && TempData.ContainsKey("ServiceTypeId")))
             {
-                var firstShipMethod = CheckoutVM.ShippingMethods.First();
+                var firstShipMethod = CheckoutVM.ShippingMethods.FirstOrDefault();
                 TempData["ServiceId"] = firstShipMethod.ServiceId;
                 TempData["ServiceTypeId"] = firstShipMethod.ServiceTypeId;
 
@@ -248,17 +255,8 @@ namespace Mubasa.Web.Areas.Customer.Controllers
                 }
                 else if (paymentMethod.Code == SD.PayMethod_MoMo)
                 {
-                    MoMo momo = new MoMo()
-                    {
-                        PartnerCode = _momo.Value.PartnerCode,
-                        PartnerName = _momo.Value.PartnerName,
-                        StoreId = _momo.Value.StoreId,
-                        AccessKey = _momo.Value.AccessKey,
-                        SecretKey = _momo.Value.SecretKey,
-                        EndPoint = _momo.Value.EndPoint,
-                    };
-
-                    var momoResponse = await momo
+                    MoMo _momo = new(_momoConfig);
+                    var momoResponse = await _momo
                         .CreateOrder(
                             checkoutVM.OrderHeader.Id,
                             paymentMethod.Code,
@@ -318,15 +316,21 @@ namespace Mubasa.Web.Areas.Customer.Controllers
                 return Json(new { success = false, message = $"{_localizer["Error Deleting Data"]}" });
             }
         }
-        
-        public IActionResult SuccessfulPayment(
-            int orderId, 
-            string paymentName, 
-            string userId)
-        {
-            UpdatePaidOrder(orderId, paymentName, userId);
 
-            return View();
+        public IActionResult PaymentResult(
+            int orderId,
+            string paymentName,
+            string userId,
+            int resultCode)
+        {
+
+            if(resultCode == 0)
+            {
+                UpdatePaidOrder(orderId, paymentName, userId);
+                return View(true);
+            }
+
+            return View(false);
         }
 
         public IActionResult UpdateShippingMethod(
@@ -341,7 +345,16 @@ namespace Mubasa.Web.Areas.Customer.Controllers
 
         public IActionResult UpdatePaymentMethod(int id)
         {
-            TempData["PaymentId"] = id;
+            var paymentCode = _db.PaymentMethod.GetFirstOrDefault(i => i.Id == id).Code;
+
+            if (paymentCode == SD.PayMethod_Zalo)
+            {
+                TempData["failure"] = "Ví Zalo đang bảo trì";
+            }
+            else
+            {
+                TempData["PaymentId"] = id;
+            }
 
             return RedirectToAction(nameof(CheckOut));
         }
@@ -374,14 +387,7 @@ namespace Mubasa.Web.Areas.Customer.Controllers
         {
             try
             {
-                GiaoHangNhanh GHN = new GiaoHangNhanh()
-                {
-                    EndPoint = _ghn.Value.EndPoint,
-                    Token = _ghn.Value.Token,
-                    ShopId = _ghn.Value.ShopId,
-                    DistrictId = _ghn.Value.DistrictId,
-                    WardId = _ghn.Value.WardId,
-                };
+                GiaoHangNhanh GHN = new(_ghnConfig);
 
                 string district_id = districtId.ToString();
 
@@ -433,13 +439,7 @@ namespace Mubasa.Web.Areas.Customer.Controllers
     
         private async Task<IActionResult> HandleZaloPayment(int orderId, IEnumerable<ShoppingItem> shoppingCart, double amount)
         {
-            ZaloPay zaloPay = new ZaloPay()
-            {
-                AppId = _zaloPay.Value.AppId,
-                Api_Key_1 = _zaloPay.Value.Api_Key_1,
-                Api_Key_2 = _zaloPay.Value.Api_Key_2,
-                EndPoint = _zaloPay.Value.EndPoint,
-            };
+            ZaloPay zaloPay = new(_zaloPayConfig);
 
             var zalopayResponse = await zaloPay
                 .CreateOrder(

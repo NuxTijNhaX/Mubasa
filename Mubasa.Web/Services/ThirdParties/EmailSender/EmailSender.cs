@@ -10,7 +10,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mubasa.Web.Functionality.EmailSender
+namespace Mubasa.Web.Services.ThirdParties.EmailSender
 {
     public class EmailSender : IEmailSender
     {
@@ -59,8 +59,8 @@ namespace Mubasa.Web.Functionality.EmailSender
             {
                 throw;
             }
-            
-            
+
+
         }
     }
 }

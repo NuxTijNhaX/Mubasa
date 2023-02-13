@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mubasa.Web.Functionality.EmailSender
+namespace Mubasa.Web.Services.ThirdParties.EmailSender
 {
     public class MailGun
     {

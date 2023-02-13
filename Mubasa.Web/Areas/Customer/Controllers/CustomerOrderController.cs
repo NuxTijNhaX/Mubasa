@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
 using Mubasa.Models.ViewModels;
 using Mubasa.Utility;
+using Mubasa.Web.Services.ThirdParties.PaymentGateway.MoMo;
 using System.Security.Claims;
 
 namespace Mubasa.Web.Areas.Customer.Controllers
@@ -12,13 +14,17 @@ namespace Mubasa.Web.Areas.Customer.Controllers
     public class CustomerOrderController : Controller
     {
         private readonly IUnitOfWork _db;
-        public CustomerOrderController(IUnitOfWork db)
+        private readonly IOptions<MoMoConfig> _momoConfig;
+        public CustomerOrderController(
+            IUnitOfWork db, 
+            IOptions<MoMoConfig> momoConfig)
         {
             _db = db;
+            _momoConfig = momoConfig;
         }
 
         // GET: CustomerOrderController
-        public ActionResult Index(string? status = SD.OrderPending)
+        public ActionResult Index(string? status = SD.OrderWait4Pay)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -48,70 +54,13 @@ namespace Mubasa.Web.Areas.Customer.Controllers
                 OrderDetails = _db.OrderDetail.GetAll(i => i.OrderHeaderId == id, includeProp: "Product"),
             };
 
+            foreach (var item in orderDetailVM.OrderDetails)
+            {
+                var price = item.Quantity * item.UnitPrice;
+                orderDetailVM.SubTotal += price;
+            }
+
             return View(orderDetailVM);
-        }
-
-        // GET: CustomerOrderController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: CustomerOrderController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: CustomerOrderController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: CustomerOrderController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: CustomerOrderController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CustomerOrderController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         public IActionResult UpdateOrderStatus(int orderId, string status)
@@ -135,25 +84,29 @@ namespace Mubasa.Web.Areas.Customer.Controllers
             return RedirectToAction(nameof(Details), new { id = orderId });
         }
 
-        public IActionResult PayOrder(int orderId)
+        public async Task<IActionResult> PayOrder(int orderId)
         {
-            //var order = _db.OrderHeader.GetFirstOrDefault(i => i.Id == orderId);
+            var order = _db.OrderHeader.GetFirstOrDefault(
+                i => i.Id == orderId, 
+                includeProp: "PaymentMethod");
 
-            //if (order == null)
-            //{
-            //    return NotFound();
-            //}
+            var paymentCode = order.PaymentMethod.Code;
 
-            //if (order.PaymentStatus == SD.PaymentPaid)
-            //{
-            //    // TODO: return Money
-            //}
+            if (order == null)
+            {
+                return NotFound();
+            }
 
-            //order.OrderStatus = status;
-            //_db.Save();
+            if (paymentCode == SD.PayMethod_Zalo)
+            {
+                // TODO
+            }
+            else if (paymentCode == SD.PayMethod_MoMo)
+            {
+                // TODO
+            }
 
-            //TempData["success"] = "Hủy đơn hàng thành công";
-            //return RedirectToAction(nameof(Details), new { id = orderId });
+            TempData["failure"] = "Lỗi thanh toán";
 
             return RedirectToAction("Index");
         }

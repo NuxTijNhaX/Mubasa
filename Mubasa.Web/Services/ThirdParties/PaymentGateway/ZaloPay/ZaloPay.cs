@@ -1,26 +1,39 @@
-﻿using Mubasa.Models;
+﻿using Microsoft.Extensions.Options;
+using Mubasa.Models;
+using Mubasa.Utility;
+using Mubasa.Web.Services.ThirdParties.PaymentGateway.MoMo;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mubasa.Utility.ThirdParties.PaymentGateway
+namespace Mubasa.Web.Services.ThirdParties.PaymentGateway.ZaloPay
 {
     public class ZaloPay
     {
-        public int AppId { get; set; }
-        public string Api_Key_1 { get; set;}
-        public string Api_Key_2 { get; set; }
-        public string EndPoint { get; set; }
+        public ZaloPay(IOptions<ZaloPayConfig> zalo)
+        {
+            AppId = zalo.Value.AppId;
+            Api_Key_1 = zalo.Value.Api_Key_1;
+            Api_Key_2 = zalo.Value.Api_Key_2;
+            EndPoint = zalo.Value.EndPoint;
+        }
+
+        private int AppId { get; set; }
+        private string Api_Key_1 { get; set; }
+        private string Api_Key_2 { get; set; }
+        private string EndPoint { get; set; }
 
         public Task<Dictionary<string, string>> CreateOrder(IEnumerable<ShoppingItem> shoppingItems, int orderheaderId, double amount)
         {
             var appid = AppId.ToString();
             var appuser = shoppingItems.FirstOrDefault().ApplicationUserId;
             var apptransid = $"{DateTime.Now.ToString("yyMMdd")}_{Guid.NewGuid()}";
-            var embeddata = new {
+            var embeddata = new
+            {
                 redirecturl = "https://localhost:7153/Customer/ShoppingCart/GetZaloPayCallback",
                 orderheaderid = orderheaderId,
                 paymentmethod = SD.PayMethod_Zalo,

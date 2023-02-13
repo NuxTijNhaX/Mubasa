@@ -9,7 +9,6 @@ namespace Mubasa.DataAccess.Repository.IRepository
     public interface IUnitOfWork
     {
         IAddressRepository Address { get; }
-        IDefaultAddressRepository DefaultAddress { get; }
         IProvinceRepository Province { get; }
         IDistrictRepository District { get; }
         IWardRepository Ward { get; }

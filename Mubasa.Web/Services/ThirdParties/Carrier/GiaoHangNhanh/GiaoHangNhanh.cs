@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Options;
+using Mubasa.Web.Services.ThirdParties.PaymentGateway.MoMo;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -7,15 +9,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mubasa.Utility.ThirdParties.Carrier
+namespace Mubasa.Web.Services.ThirdParties.Carrier.GiaoHangNhanh
 {
     public class GiaoHangNhanh
     {
-        public string EndPoint { get; set; }
-        public string Token { get; set; }
-        public string ShopId { get; set; }
-        public string DistrictId { get; set; }
-        public string WardId { get; set; }
+        public GiaoHangNhanh(IOptions<GiaoHangNhanhConfig> ghn)
+        {
+            EndPoint = ghn.Value.EndPoint;
+            Token = ghn.Value.Token;
+            ShopId = ghn.Value.ShopId;
+            DistrictId = ghn.Value.DistrictId;
+            WardId = ghn.Value.WardId;
+        }
+        private string EndPoint { get; set; }
+        private string Token { get; set; }
+        private string ShopId { get; set; }
+        private string DistrictId { get; set; }
+        private string WardId { get; set; }
 
         public async Task<IEnumerable<dynamic>?> GetService(string toDistrict)
         {
@@ -53,11 +63,11 @@ namespace Mubasa.Utility.ThirdParties.Carrier
             JObject responseObj = JObject.Parse(responseJSON);
             var responseData = responseObj["data"]["leadtime"];
 
-            string result = String.Empty;
-            if(responseData != null)
+            string result = string.Empty;
+            if (responseData != null)
             {
                 DateTime leadTime = new(1970, 1, 1, 0, 0, 0, 0);
-                leadTime = leadTime.AddSeconds(Double.Parse(responseData.ToString()));
+                leadTime = leadTime.AddSeconds(double.Parse(responseData.ToString()));
                 result = leadTime.ToString(format: "dd/MM/yyyy");
             }
 
@@ -81,7 +91,7 @@ namespace Mubasa.Utility.ThirdParties.Carrier
             JObject responseObj = JObject.Parse(responseJSON);
             var responseData = responseObj["data"]["total"];
 
-            return responseData?.ToString() ?? String.Empty;
+            return responseData?.ToString() ?? string.Empty;
         }
     }
 }
