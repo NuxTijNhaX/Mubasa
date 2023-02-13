@@ -7,3 +7,17 @@
         Notiflix.Notify.success('@TempData["success"]');
     </script>
 }
+
+@if(TempData["failure"] != null) 
+{
+    <script>
+        Notiflix.Notify.failure('@TempData["failure"]');
+    </script>
+}
+
+@if (TempData["info"] != null)
+{
+    <script>
+        Notiflix.Notify.info('@TempData["info"]');
+    </script>
+}

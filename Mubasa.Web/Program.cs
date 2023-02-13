@@ -6,10 +6,10 @@ using Mubasa.DataAccess.Repository.IRepository;
 using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Mubasa.Utility;
-using Mubasa.Utility.ThirdParties.Carrier;
-using Mubasa.Utility.ThirdParties.PaymentGateway;
-using Mubasa.Web.Functionality.EmailSender;
+using Mubasa.Web.Services.ThirdParties.PaymentGateway.MoMo;
+using Mubasa.Web.Services.ThirdParties.Carrier.GiaoHangNhanh;
+using Mubasa.Web.Services.ThirdParties.EmailSender;
+using Mubasa.Web.Services.ThirdParties.PaymentGateway.ZaloPay;
 
 namespace Mubasa.Web
 {
@@ -41,12 +41,12 @@ namespace Mubasa.Web
                 options.SupportedUICultures= cultures;
             });
 
-            builder.Services.Configure<GiaoHangNhanh>(
-                builder.Configuration.GetSection("GiaoHangNhanh"));
-            builder.Services.Configure<ZaloPay>(
-                builder.Configuration.GetSection("ZaloPay"));
-            builder.Services.Configure<MoMo>(
-                builder.Configuration.GetSection("MoMo"));
+            builder.Services.Configure<GiaoHangNhanhConfig>(
+                builder.Configuration.GetSection("GiaoHangNhanhConfig"));
+            builder.Services.Configure<ZaloPayConfig>(
+                builder.Configuration.GetSection("ZaloPayConfig"));
+            builder.Services.Configure<MoMoConfig>(
+                builder.Configuration.GetSection("MoMoConfig"));
             builder.Services.Configure<MailGun>(
                 builder.Configuration.GetSection("MailGun"));
 
