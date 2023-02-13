@@ -10,5 +10,6 @@ namespace Mubasa.Models.ViewModels
     {
         public OrderHeader OrderHeader { get; set; }
         public IEnumerable<OrderDetail> OrderDetails { get; set; }
+        public double SubTotal { get; set; } = 0;
     }
 }
