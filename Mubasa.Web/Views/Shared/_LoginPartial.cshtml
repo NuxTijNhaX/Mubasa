@@ -1,7 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization;
+@using Mubasa.Web.Areas.Customer.Controllers;
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject IStringLocalizer<HomeController> homeLocalizer;
 
 
 @if (SignInManager.IsSignedIn(User))
@@ -13,13 +16,13 @@
             </svg>
         </a>
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">My Profile</a></li>
-            <li><a class="dropdown-item" asp-area="Customer" asp-controller="CustomerOrder" asp-action="Index">My Order</a></li>
-            <li><a class="dropdown-item" asp-area="Customer" asp-controller="Address" asp-action="Index">My Address</a></li>
+            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">@homeLocalizer["My Profile"]</a></li>
+            <li><a class="dropdown-item" asp-area="Customer" asp-controller="CustomerOrder" asp-action="Index">@homeLocalizer["My Order"]</a></li>
+            <li><a class="dropdown-item" asp-area="Customer" asp-controller="Address" asp-action="Index">@homeLocalizer["My Address"]</a></li>
             <li><hr class="dropdown-divider"></li>
             <li class="dropdown-item">
                 <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                    <button id="logout" type="submit" class="nav-link btn btn-link text-dark">@homeLocalizer["Logout"]</button>
                 </form>
             </li>
         </ul>

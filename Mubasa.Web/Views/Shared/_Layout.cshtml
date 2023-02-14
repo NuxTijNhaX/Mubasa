@@ -57,16 +57,16 @@
                                         </svg>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Author" asp-action="Index">Author</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="CoverType" asp-action="Index">Cover Type</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Supplier" asp-action="Index">Supplier</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Publisher" asp-action="Index">Publisher</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a></li>
+                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Author" asp-action="Index">@HomeLocalizer["Author"]</a></li>
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">@HomeLocalizer["Category"]</a></li>
+                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="CoverType" asp-action="Index">@HomeLocalizer["CoverType"]</a></li>
+                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Supplier" asp-action="Index">@HomeLocalizer["Supplier"]</a></li>
+                                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="Publisher" asp-action="Index">@HomeLocalizer["Publisher"]</a></li>
+                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">@HomeLocalizer["Product"]</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">Manage Order</a></li>
+                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">@HomeLocalizer["Manage Order"]</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Create Account</a></li>
+                                                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">@HomeLocalizer["Create Account"]</a></li>
                                     </ul>
                                 </li>
                             }
@@ -74,9 +74,9 @@
                 </div>
                 
                 </div>
-                <form class="search-bar col-4" method="post">
+                        <form asp-action="Search" class="search-bar col-4">
                     <div class="text-area ps-3 py-1">
-                        <input id="input-search" type="search" placeholder="@HomeLocalizer["Search books, authors, ISBNs"]" />
+                        <input id="input-search" name="search" type="search" placeholder="@HomeLocalizer["Search books, authors, ISBNs"]" />
                     </div>
 
                     <button id="btn-submit-txt" class="px-4 py-1">
