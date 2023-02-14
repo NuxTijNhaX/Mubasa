@@ -26,6 +26,20 @@ namespace Mubasa.Web.Areas.Customer.Controllers
             return View();
         }
 
+        public IActionResult ListProducts(string? search)
+        {
+            var products = _db.Product.GetAll();
+
+            return View(products);
+        }
+
+        public IActionResult Search(string? search)
+        {
+            var products = _db.Product.GetAll();
+
+            return RedirectToAction(nameof(ListProducts));
+        }
+
         public IActionResult Details(int productId)
         {
             var product = _db.Product.GetFirstOrDefault(x => x.Id == productId, includeProp: "Category,CoverType,Author,Publisher,Supplier");
@@ -49,30 +63,74 @@ namespace Mubasa.Web.Areas.Customer.Controllers
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             shoppingItem.ApplicationUserId = claim.Value;
 
-            var shoppingItemDb = _db.ShoppingItem.GetFirstOrDefault(x => x.ApplicationUserId == shoppingItem.ApplicationUserId && x.ProductId == shoppingItem.ProductId);
-            
-            if (shoppingItemDb != null)
-            {
-                shoppingItemDb.Count += shoppingItem.Count;
-                _db.ShoppingItem.Update(shoppingItemDb);
-                _db.Save();
-            }
-            else
-            {
-                _db.ShoppingItem.Add(shoppingItem);
-                _db.Save();
-
-                HttpContext.Session.SetInt32(
-                    SD.SessionCart,
-                    _db.ShoppingItem
-                        .GetAll(i => i.ApplicationUserId == claim.Value)
-                        .ToList()
-                        .Count);
-            }
+            AddProductToCart(shoppingItem);
 
             return RedirectToAction("Index");
         }
 
+        [Authorize]
+        public IActionResult AddToCart(int productId, string returnUrl = null)
+        {
+            try
+            {
+                returnUrl ??= Url.Content("~/");
+
+                ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+                ShoppingItem shoppingItem = new()
+                {
+                    ProductId = productId,
+                    ApplicationUserId = claim.Value,
+                    Count = 1,
+                };
+
+                AddProductToCart(shoppingItem);
+
+                return LocalRedirect(returnUrl);
+            }
+            catch (Exception)
+            {
+                return LocalRedirect(Url.Content("~/"));
+            }
+            
+        }
+
+        private void AddProductToCart(ShoppingItem shoppingItem)
+        {
+            try
+            {
+                var shoppingItemDb = _db.ShoppingItem.GetFirstOrDefault(x => 
+                    x.ApplicationUserId == shoppingItem.ApplicationUserId && 
+                    x.ProductId == shoppingItem.ProductId);
+
+                if (shoppingItemDb != null)
+                {
+                    shoppingItemDb.Count += shoppingItem.Count;
+                    _db.ShoppingItem.Update(shoppingItemDb);
+                    _db.Save();
+                }
+                else
+                {
+                    _db.ShoppingItem.Add(shoppingItem);
+                    _db.Save();
+
+                    HttpContext.Session.SetInt32(
+                        SD.SessionCart,
+                        _db.ShoppingItem.GetAll(i => 
+                                i.ApplicationUserId == shoppingItem.ApplicationUserId)
+                            .ToList()
+                            .Count);
+                }
+
+                TempData["success"] = "Đã thêm sản phẩm vào giỏ.";
+            }
+            catch (Exception)
+            {
+                TempData["failure"] = "Đã có lỗi, vui lòng thử lại";
+            }
+        }
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

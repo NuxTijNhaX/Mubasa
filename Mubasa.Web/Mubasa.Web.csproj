@@ -40,16 +40,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Resources\Areas\Admin\Controllers\" />
     <Folder Include="wwwroot\images\product\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\Areas\Admin\Controllers\AuthorController.en-US.resx">
-      <Generator></Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Areas\Admin\Controllers\AuthorController.vi-VN.resx">
-      <Generator></Generator>
-    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Product>;
+
+
+<div class="row g-5">
+    <div class="col-3 ps-0">
+        <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
+            <div class="text-center">
+                <h5 class="text-danger fw-bold fs-4">Mua theo</h5>
+                <hr />
+            </div>
+            <div>
+                <p class="fs-5 text-muted">Nhóm sản phẩm</p>
+            </div>
+            <div>
+                <p class="fs-5 text-muted">Hình thức</p>
+            </div>
+            <div>
+                <p class="fs-5 text-muted">Tác giả</p>
+            </div>
+            <div>
+                <p class="fs-5 text-muted">Nhà xuất bản</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-9 p-0">
+        <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
+            <div class="row">
+                <h5 class="text-muted">Kết quả tìm kiếm với:</h5>
+            </div>
+            <hr />
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    @await Html.PartialAsync("_ProductCard", item);
+                }
+            </div>
+        </div>
+    </div>
+</div>
