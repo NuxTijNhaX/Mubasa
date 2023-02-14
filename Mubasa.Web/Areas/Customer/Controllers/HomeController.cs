@@ -23,7 +23,29 @@ namespace Mubasa.Web.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var products = _db.Product.GetAll().Take(12);
+
+            return View(products);
+        }
+
+        public IActionResult ListProducts(string? search, int? from_price, int? to_price)
+        {
+            IEnumerable<Product> products; 
+            if (search == null)
+            {
+                products = _db.Product.GetAll();
+            }
+            else
+            {
+                products = _db.Product.GetAll(i => i.Name.Contains(search));
+            }
+
+            if (from_price != null)
+            {
+                products = products.Where(i => from_price < i.Price && i.Price <= to_price);
+            }
+
+            return View(products);
         }
 
         public IActionResult Details(int productId)
@@ -49,30 +71,74 @@ namespace Mubasa.Web.Areas.Customer.Controllers
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             shoppingItem.ApplicationUserId = claim.Value;
 
-            var shoppingItemDb = _db.ShoppingItem.GetFirstOrDefault(x => x.ApplicationUserId == shoppingItem.ApplicationUserId && x.ProductId == shoppingItem.ProductId);
-            
-            if (shoppingItemDb != null)
-            {
-                shoppingItemDb.Count += shoppingItem.Count;
-                _db.ShoppingItem.Update(shoppingItemDb);
-                _db.Save();
-            }
-            else
-            {
-                _db.ShoppingItem.Add(shoppingItem);
-                _db.Save();
-
-                HttpContext.Session.SetInt32(
-                    SD.SessionCart,
-                    _db.ShoppingItem
-                        .GetAll(i => i.ApplicationUserId == claim.Value)
-                        .ToList()
-                        .Count);
-            }
+            AddProductToCart(shoppingItem);
 
             return RedirectToAction("Index");
         }
 
+        [Authorize]
+        public IActionResult AddToCart(int productId, string returnUrl = null)
+        {
+            try
+            {
+                returnUrl ??= Url.Content("~/");
+
+                ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+                ShoppingItem shoppingItem = new()
+                {
+                    ProductId = productId,
+                    ApplicationUserId = claim.Value,
+                    Count = 1,
+                };
+
+                AddProductToCart(shoppingItem);
+
+                return LocalRedirect(returnUrl);
+            }
+            catch (Exception)
+            {
+                return LocalRedirect(Url.Content("~/"));
+            }
+            
+        }
+
+        private void AddProductToCart(ShoppingItem shoppingItem)
+        {
+            try
+            {
+                var shoppingItemDb = _db.ShoppingItem.GetFirstOrDefault(x => 
+                    x.ApplicationUserId == shoppingItem.ApplicationUserId && 
+                    x.ProductId == shoppingItem.ProductId);
+
+                if (shoppingItemDb != null)
+                {
+                    shoppingItemDb.Count += shoppingItem.Count;
+                    _db.ShoppingItem.Update(shoppingItemDb);
+                    _db.Save();
+                }
+                else
+                {
+                    _db.ShoppingItem.Add(shoppingItem);
+                    _db.Save();
+
+                    HttpContext.Session.SetInt32(
+                        SD.SessionCart,
+                        _db.ShoppingItem.GetAll(i => 
+                                i.ApplicationUserId == shoppingItem.ApplicationUserId)
+                            .ToList()
+                            .Count);
+                }
+
+                TempData["success"] = "Đã thêm sản phẩm vào giỏ.";
+            }
+            catch (Exception)
+            {
+                TempData["failure"] = "Đã có lỗi, vui lòng thử lại";
+            }
+        }
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

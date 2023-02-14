@@ -144,6 +144,9 @@
   <data name="CoverType" xml:space="preserve">
     <value>Hình Thức Bìa</value>
   </data>
+  <data name="Create Account" xml:space="preserve">
+    <value>Tạo Tài Khoản</value>
+  </data>
   <data name="Create New" xml:space="preserve">
     <value>Tạo Mới</value>
   </data>
@@ -176,6 +179,21 @@
   </data>
   <data name="Home address" xml:space="preserve">
     <value>Số nhà</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Đăng xuất</value>
+  </data>
+  <data name="Manage Order" xml:space="preserve">
+    <value>Quản Lý Đơn Hàng</value>
+  </data>
+  <data name="My Address" xml:space="preserve">
+    <value>Địa chỉ của tôi</value>
+  </data>
+  <data name="My Order" xml:space="preserve">
+    <value>Thông tin đơn hàng</value>
+  </data>
+  <data name="My Profile" xml:space="preserve">
+    <value>Thông tin tài khoản</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Tên</value>

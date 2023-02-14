@@ -48,7 +48,7 @@
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                            @if (User.IsInRole(SD.Role_Admin))
+                            @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                             {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link text-dark dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -57,16 +57,29 @@
                                         </svg>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Author" asp-action="Index">Author</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="CoverType" asp-action="Index">Cover Type</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Supplier" asp-action="Index">Supplier</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Publisher" asp-action="Index">Publisher</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a></li>
+                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Author" asp-action="Index">@HomeLocalizer["Author"]</a></li>
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">@HomeLocalizer["Category"]</a></li>
+                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="CoverType" asp-action="Index">@HomeLocalizer["CoverType"]</a></li>
+                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Supplier" asp-action="Index">@HomeLocalizer["Supplier"]</a></li>
+                                            <li><a class="dropdown-item" asp-area="Admin" asp-controller="Publisher" asp-action="Index">@HomeLocalizer["Publisher"]</a></li>
+                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">@HomeLocalizer["Product"]</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">Manage Order</a></li>
+                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">@HomeLocalizer["Manage Order"]</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Create Account</a></li>
+                                                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">@HomeLocalizer["Create Account"]</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link text-dark dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-menu-button-wide-fill" viewBox="0 0 16 16">
+                                          <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5v2A1.5 1.5 0 0 0 1.5 5h13A1.5 1.5 0 0 0 16 3.5v-2A1.5 1.5 0 0 0 14.5 0h-13zm1 2h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1zm9.927.427A.25.25 0 0 1 12.604 2h.792a.25.25 0 0 1 .177.427l-.396.396a.25.25 0 0 1-.354 0l-.396-.396zM0 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V8zm1 3v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2H1zm14-1V8a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2h14zM2 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
+                                        </svg>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-area="Customer" asp-controller="Home" asp-action="ListProducts">Tất cả sản phẩm</a></li>
                                     </ul>
                                 </li>
                             }
@@ -74,9 +87,10 @@
                 </div>
                 
                 </div>
-                <form class="search-bar col-4" method="post">
+
+                <form asp-action="ListProducts" class="search-bar col-4" method="get">
                     <div class="text-area ps-3 py-1">
-                        <input id="input-search" type="search" placeholder="@HomeLocalizer["Search books, authors, ISBNs"]" />
+                        <input required id="input-search" name="search" type="search" placeholder="@HomeLocalizer["Search books, authors, ISBNs"]" />
                     </div>
 
                     <button id="btn-submit-txt" class="px-4 py-1">

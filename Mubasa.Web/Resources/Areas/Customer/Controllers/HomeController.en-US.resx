@@ -144,6 +144,9 @@
   <data name="CoverType" xml:space="preserve">
     <value>Cover Type</value>
   </data>
+  <data name="Create Account" xml:space="preserve">
+    <value>Create Account</value>
+  </data>
   <data name="Create New" xml:space="preserve">
     <value>Create New</value>
   </data>
@@ -176,6 +179,21 @@
   </data>
   <data name="Home address" xml:space="preserve">
     <value>Home address</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Manage Order" xml:space="preserve">
+    <value>Manage Order</value>
+  </data>
+  <data name="My Address" xml:space="preserve">
+    <value>My Address</value>
+  </data>
+  <data name="My Order" xml:space="preserve">
+    <value>My Order</value>
+  </data>
+  <data name="My Profile" xml:space="preserve">
+    <value>My Profile</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
