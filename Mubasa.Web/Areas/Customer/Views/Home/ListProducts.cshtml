@@ -1,6 +1,17 @@
-﻿@model IEnumerable<Product>;
+﻿@using System.Globalization;
+@model IEnumerable<Product>;
 
+@{
+    var searchValue = Context.Request.Query["search"].ToString() ?? String.Empty;
+    var fromPriceValue = Context.Request.Query["from_price"].ToString() ?? String.Empty;
+    var toPriceValue = Context.Request.Query["to_price"].ToString() ?? String.Empty;
 
+    var culture = new CultureInfo("vi-VN");
+    var path = Context.Request.Path;
+    var linkTemplate = $"{path}?search={searchValue}&from_price={fromPriceValue}&to_price={toPriceValue}";
+
+    var priceRange = new List<int>(6){ 0, 150000, 300000, 500000, 700000, 99999999 };
+}
 <div class="row g-5">
     <div class="col-3 ps-0">
         <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
@@ -9,29 +20,55 @@
                 <hr />
             </div>
             <div>
-                <p class="fs-5 text-muted">Nhóm sản phẩm</p>
+                <p class="fs-5 text-muted mb-0">Giá</p>
+                <div class="options ms-3">
+                    @for (int i = 0; i < priceRange.Count - 1; i++)
+                    {
+                        linkTemplate = $"{path}?search={searchValue}&from_price={priceRange[i]}&to_price={priceRange[i + 1]}";
+
+                        if (i == priceRange.Count - 2)
+                        {
+                            <a class="d-block text-decoration-none" href="@linkTemplate">@priceRange[i].ToString("c", culture) - Trở lên</a>
+                            break;
+                        }
+                        
+                        <a class="d-block text-decoration-none" href="@linkTemplate">@priceRange[i].ToString("c", culture) - @priceRange[i + 1].ToString("c", culture)</a>    
+                    }
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="@path" class="btn btn-danger">Xóa lọc</a>
+            </div>
+            @*<div>
+                <p class="fs-5 text-muted">Nhà cung cấp</p>
             </div>
             <div>
                 <p class="fs-5 text-muted">Hình thức</p>
-            </div>
-            <div>
-                <p class="fs-5 text-muted">Tác giả</p>
-            </div>
-            <div>
-                <p class="fs-5 text-muted">Nhà xuất bản</p>
-            </div>
+            </div>*@
         </div>
     </div>
     <div class="col-9 p-0">
         <div class="border rounded-3 bg-light shadow-sm p-3 mb-3">
+            @if(searchValue != String.Empty)
+            {
+                <div class="row">
+                    <h5 class="text-muted">Kết quả tìm kiếm với: "<span class="fw-bold text-dark">@searchValue</span>"</h5>
+                </div>
+                <hr />
+            }
             <div class="row">
-                <h5 class="text-muted">Kết quả tìm kiếm với:</h5>
-            </div>
-            <hr />
-            <div class="row">
-                @foreach (var item in Model)
+                @if(Model.Count() == 0)
                 {
-                    @await Html.PartialAsync("_ProductCard", item);
+                    <div class="text-center">
+                        <p class="text-danger fw-bold fs-5 p-4">Không tìm thấy sản phẩm nào phù hợp!</p>
+                    </div>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        @await Html.PartialAsync("_ProductCard", item);
+                    }
                 }
             </div>
         </div>

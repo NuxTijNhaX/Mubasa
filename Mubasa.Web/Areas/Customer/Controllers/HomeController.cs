@@ -23,21 +23,29 @@ namespace Mubasa.Web.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult ListProducts(string? search)
-        {
-            var products = _db.Product.GetAll();
+            var products = _db.Product.GetAll().Take(12);
 
             return View(products);
         }
 
-        public IActionResult Search(string? search)
+        public IActionResult ListProducts(string? search, int? from_price, int? to_price)
         {
-            var products = _db.Product.GetAll();
+            IEnumerable<Product> products; 
+            if (search == null)
+            {
+                products = _db.Product.GetAll();
+            }
+            else
+            {
+                products = _db.Product.GetAll(i => i.Name.Contains(search));
+            }
 
-            return RedirectToAction(nameof(ListProducts));
+            if (from_price != null)
+            {
+                products = products.Where(i => from_price < i.Price && i.Price <= to_price);
+            }
+
+            return View(products);
         }
 
         public IActionResult Details(int productId)

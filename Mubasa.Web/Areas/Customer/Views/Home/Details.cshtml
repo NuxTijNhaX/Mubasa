@@ -88,37 +88,25 @@
     <h5 class="fw-bold mb-4 fs-4">Thông tin sản phẩm</h5>
     <div class="">
         <div class="row">
-            <p class="col-3 text-muted">okee</p>
-            <p class="col">okee</p>
+            <p class="col-3 text-muted">ISBN</p>
+            <p class="col">@Model.Product.ISBN</p>
         </div>
         <div class="row">
-            <p class="col-3 text-muted">okee</p>
-            <p class="col">okee</p>
+            <p class="col-3 text-muted">@homeLocalizer["Supplier"]</p>
+            <p class="col">@Model.Product.Supplier.Name</p>
         </div>
         <div class="row">
-            <p class="col-3 text-muted">okee</p>
-            <p class="col">okee</p>
+            <p class="col-3 text-muted">Trọng lượng (gr)</p>
+            <p class="col">100</p>
         </div>
         <div class="row">
-            <p class="col-3 text-muted">okee</p>
-            <p class="col">okee</p>
-        </div>
-        <div class="row">
-            <p class="col-3 text-muted">okee</p>
-            <p class="col">okee</p>
-        </div>
-        <div class="row">
-            <p class="col-3 text-muted">okee</p>
-            <p class="col">okee</p>
-        </div>
-        <div class="row">
-            <p class="col-3 text-muted">okee</p>
-            <p class="col">okee</p>
+            <p class="col-3 text-muted">Kích thước</p>
+            <p class="col">15.5 x 11 x 1 cm</p>
         </div>
     </div>
     <hr />
     <div>
-        <div>
+        <div class="text-justify">
             @Model.Product.Description
         </div>
         <div>
