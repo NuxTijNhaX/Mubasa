@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mubasa.Models\Mubasa.Models.csproj" />
+    <ProjectReference Include="..\Mubasa.Utility\Mubasa.Utility.csproj" />
   </ItemGroup>
 
 </Project>

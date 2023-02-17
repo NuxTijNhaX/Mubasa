@@ -6,10 +6,9 @@ using Mubasa.DataAccess.Repository.IRepository;
 using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Mubasa.Web.Services.ThirdParties.PaymentGateway.MoMo;
-using Mubasa.Web.Services.ThirdParties.Carrier.GiaoHangNhanh;
 using Mubasa.Web.Services.ThirdParties.EmailSender;
-using Mubasa.Web.Services.ThirdParties.PaymentGateway.ZaloPay;
+using Mubasa.DataAccess.DbInitializer;
+using Mubasa.Models.ConfigModels;
 
 namespace Mubasa.Web
 {
@@ -47,8 +46,8 @@ namespace Mubasa.Web
                 builder.Configuration.GetSection("ZaloPayConfig"));
             builder.Services.Configure<MoMoConfig>(
                 builder.Configuration.GetSection("MoMoConfig"));
-            builder.Services.Configure<MailGun>(
-                builder.Configuration.GetSection("MailGun"));
+            builder.Services.Configure<MailGunConfig>(
+                builder.Configuration.GetSection("MailGunConfig"));
 
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
@@ -89,6 +88,7 @@ namespace Mubasa.Web
             });
 
             builder.Services.AddSingleton<IEmailSender, EmailSender>();
+            builder.Services.AddScoped<IDbInitializer, DbInitializer>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
@@ -100,6 +100,8 @@ namespace Mubasa.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            SeedDatabase();
 
             app.UseRequestLocalization();
 
@@ -122,6 +124,15 @@ namespace Mubasa.Web
                 pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
+
+            void SeedDatabase()
+            {
+                using (var scope = app.Services.CreateScope())
+                {
+                    var dbInit = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+                    dbInit.Initialize();
+                }
+            }
         }
     }
 }

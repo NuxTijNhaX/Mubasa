@@ -1,13 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mubasa.Web.Services.ThirdParties.Carrier.GiaoHangNhanh
+﻿namespace Mubasa.Models.ConfigModels
 {
     public class GiaoHangNhanhConfig
     {

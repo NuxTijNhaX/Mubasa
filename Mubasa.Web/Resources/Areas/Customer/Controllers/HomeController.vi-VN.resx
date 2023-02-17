@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Add to cart" xml:space="preserve">
+    <value>Thêm vào giỏ hàng</value>
+  </data>
+  <data name="All Products" xml:space="preserve">
+    <value>Tất Cả Sản Phẩm</value>
+  </data>
   <data name="Author" xml:space="preserve">
     <value>Tác giả</value>
   </data>
@@ -171,6 +177,9 @@
   <data name="Error Deleting Data" xml:space="preserve">
     <value>Đã Có Lỗi Khi Xóa Dữ Liệu</value>
   </data>
+  <data name="Forgot password" xml:space="preserve">
+    <value>Quên mật khẩu</value>
+  </data>
   <data name="Full name of recipient" xml:space="preserve">
     <value>Họ và tên người nhận</value>
   </data>
@@ -179,6 +188,9 @@
   </data>
   <data name="Home address" xml:space="preserve">
     <value>Số nhà</value>
+  </data>
+  <data name="Log in" xml:space="preserve">
+    <value>Đăng Nhập</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>Đăng xuất</value>
@@ -197,6 +209,12 @@
   </data>
   <data name="Name" xml:space="preserve">
     <value>Tên</value>
+  </data>
+  <data name="New Books" xml:space="preserve">
+    <value>Sách Mới</value>
+  </data>
+  <data name="New user" xml:space="preserve">
+    <value>Bạn là người dùng mới</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>Không</value>
@@ -217,6 +235,9 @@
   <data name="Product" xml:space="preserve">
     <value>Sản Phẩm</value>
   </data>
+  <data name="Product Information" xml:space="preserve">
+    <value>Thông Tin Sản Phẩm</value>
+  </data>
   <data name="Products" xml:space="preserve">
     <value>Sản Phẩm</value>
   </data>
@@ -228,6 +249,9 @@
   </data>
   <data name="Quantity" xml:space="preserve">
     <value>Số lượng</value>
+  </data>
+  <data name="Remember me" xml:space="preserve">
+    <value>Ghi nhớ đăng nhập</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Lưu lại</value>
@@ -246,6 +270,9 @@
   </data>
   <data name="Shipping Method" xml:space="preserve">
     <value>Phương Thức Giao Hàng</value>
+  </data>
+  <data name="Sign up" xml:space="preserve">
+    <value>Đăng ký</value>
   </data>
   <data name="Special Charactors" xml:space="preserve">
     <value>Vui lòng không sử dụng ký tự đặc biệt</value>

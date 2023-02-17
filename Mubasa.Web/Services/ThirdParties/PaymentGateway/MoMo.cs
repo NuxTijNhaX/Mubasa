@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Mubasa.Models.ConfigModels;
 using Mubasa.Utility;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -10,7 +11,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mubasa.Web.Services.ThirdParties.PaymentGateway.MoMo
+namespace Mubasa.Web.Services.ThirdParties.PaymentGateway
 {
     public class MoMo
     {
