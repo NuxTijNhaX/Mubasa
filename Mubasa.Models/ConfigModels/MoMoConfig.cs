@@ -1,4 +1,4 @@
-﻿namespace Mubasa.Web.Services.ThirdParties.PaymentGateway.MoMo
+﻿namespace Mubasa.Models.ConfigModels
 {
     public class MoMoConfig
     {

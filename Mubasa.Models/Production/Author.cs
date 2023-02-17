@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mubasa.Models
 {
-    public class Supplier
+    [Table("Authors", Schema = "Production")]
+    public class Author
     {
         public int Id { get; set; }
 

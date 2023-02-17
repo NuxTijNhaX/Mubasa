@@ -8,7 +8,7 @@
 @inject IOptions<RequestLocalizationOptions> LocOptions
 @inject IStringLocalizer<HomeController> HomeLocalizer;
 @{
-    string returnUrl = ViewContext.HttpContext.Request.Path;
+    string returnUrl = ViewContext.HttpContext.Request.Path + ViewContext.HttpContext.Request.QueryString;
     // var requestCulture = Context.Features.Get<IRequestCultureFeature>();
     var cultureItems = LocOptions.Value.SupportedUICultures;
 }
@@ -79,7 +79,7 @@
                                         </svg>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-area="Customer" asp-controller="Home" asp-action="ListProducts">Tất cả sản phẩm</a></li>
+                                                <li><a class="dropdown-item" asp-area="Customer" asp-controller="Home" asp-action="ListProducts">@HomeLocalizer["All Products"]</a></li>
                                     </ul>
                                 </li>
                             }

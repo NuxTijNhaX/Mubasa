@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
 using Mubasa.Models.ViewModels;
-using Mubasa.Web.Services.ThirdParties.Carrier.GiaoHangNhanh;
+using Mubasa.Web.Services.ThirdParties.Carrier;
 using NuGet.Protocol;
 using System.Security.Claims;
 using System.Text.Json.Nodes;

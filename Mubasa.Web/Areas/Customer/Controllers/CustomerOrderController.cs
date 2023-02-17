@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Mubasa.DataAccess.Repository.IRepository;
 using Mubasa.Models;
+using Mubasa.Models.ConfigModels;
 using Mubasa.Models.ViewModels;
 using Mubasa.Utility;
-using Mubasa.Web.Services.ThirdParties.PaymentGateway.MoMo;
 using System.Security.Claims;
 
 namespace Mubasa.Web.Areas.Customer.Controllers

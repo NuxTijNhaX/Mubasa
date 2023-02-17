@@ -1,15 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
-using Mubasa.Web.Services.ThirdParties.PaymentGateway.MoMo;
-using Newtonsoft.Json;
+using Mubasa.Models.ConfigModels;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mubasa.Web.Services.ThirdParties.Carrier.GiaoHangNhanh
+namespace Mubasa.Web.Services.ThirdParties.Carrier
 {
     public class GiaoHangNhanh
     {
@@ -26,6 +19,25 @@ namespace Mubasa.Web.Services.ThirdParties.Carrier.GiaoHangNhanh
         private string ShopId { get; set; }
         private string DistrictId { get; set; }
         private string WardId { get; set; }
+
+        public async Task<IEnumerable<dynamic>?> GetAddress(string path)
+        {
+            using HttpClient httpClient = new HttpClient();
+            using HttpRequestMessage requestMsg = new HttpRequestMessage();
+            requestMsg.Method = HttpMethod.Get;
+            requestMsg.RequestUri = new Uri($"{EndPoint}/master-data/{path}");
+            requestMsg.Headers.Add("Accept", "application/json");
+            requestMsg.Headers.Add("Token", Token);
+
+            HttpResponseMessage response = await httpClient.SendAsync(requestMsg);
+
+            string provinceJSON = await response.Content.ReadAsStringAsync();
+
+            JObject provinceObj = JObject.Parse(provinceJSON);
+            IEnumerable<dynamic>? provinceData = provinceObj["data"]?.Children().ToList().Cast<dynamic>();
+
+            return provinceData;
+        }
 
         public async Task<IEnumerable<dynamic>?> GetService(string toDistrict)
         {

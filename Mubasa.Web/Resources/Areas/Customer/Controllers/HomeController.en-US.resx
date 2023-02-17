@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Add to cart" xml:space="preserve">
+    <value>Add to cart</value>
+  </data>
+  <data name="All Products" xml:space="preserve">
+    <value>All Products</value>
+  </data>
   <data name="Author" xml:space="preserve">
     <value>Author</value>
   </data>
@@ -171,6 +177,9 @@
   <data name="Error Deleting Data" xml:space="preserve">
     <value>Error Deleting Data</value>
   </data>
+  <data name="Forgot password" xml:space="preserve">
+    <value>Forgot password</value>
+  </data>
   <data name="Full name of recipient" xml:space="preserve">
     <value>Full name of recipient</value>
   </data>
@@ -179,6 +188,9 @@
   </data>
   <data name="Home address" xml:space="preserve">
     <value>Home address</value>
+  </data>
+  <data name="Log in" xml:space="preserve">
+    <value>Log in</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>Logout</value>
@@ -198,6 +210,12 @@
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="New Books" xml:space="preserve">
+    <value>New Books</value>
+  </data>
+  <data name="New user" xml:space="preserve">
+    <value>New user</value>
+  </data>
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
@@ -216,6 +234,9 @@
   <data name="Product" xml:space="preserve">
     <value>Product</value>
   </data>
+  <data name="Product Information" xml:space="preserve">
+    <value>Product Information</value>
+  </data>
   <data name="Products" xml:space="preserve">
     <value>Product(s)</value>
   </data>
@@ -227,6 +248,9 @@
   </data>
   <data name="Quantity" xml:space="preserve">
     <value>Quantity</value>
+  </data>
+  <data name="Remember me" xml:space="preserve">
+    <value>Remember me</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
@@ -245,6 +269,9 @@
   </data>
   <data name="Shipping Method" xml:space="preserve">
     <value>Shipping Method</value>
+  </data>
+  <data name="Sign up" xml:space="preserve">
+    <value>Sign up</value>
   </data>
   <data name="Special Charactors" xml:space="preserve">
     <value>Please do not use special charactors</value>
