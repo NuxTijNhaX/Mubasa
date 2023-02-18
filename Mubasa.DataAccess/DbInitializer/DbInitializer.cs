@@ -58,7 +58,7 @@ namespace Mubasa.DataAccess.DbInitializer
                 ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(
                     i => i.Email == "root.user@mubasa.com");
 
-                _userManager.AddToRoleAsync(user, SD.Role_Admin);
+                _userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
             }
         }
     }
