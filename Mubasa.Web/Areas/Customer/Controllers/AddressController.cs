@@ -37,18 +37,21 @@ namespace Mubasa.Web.Areas.Customer.Controllers
             var addresses = _db.Address.GetAll(
                 i => i.ApplicationUserId == claim.Value, 
                 includeProp: "Ward,District,Province");
-
-            var user = _db.ApplicationUser.GetFirstOrDefault(i => i.Id == claim.Value);
-            if (user.AddressId == null)
+            
+            if(addresses.Count() != 0)
             {
-                user.AddressId = addresses.First().Id;
-                _db.Save();
-            }
+                var user = _db.ApplicationUser.GetFirstOrDefault(i => i.Id == claim.Value);
+                if (user.AddressId == null)
+                {
+                    user.AddressId = addresses.First().Id;
+                    _db.Save();
+                }
 
-            var defaultAddress = addresses.FirstOrDefault(i => i.Id == user.AddressId);
-            if(defaultAddress != null)
-            {
-                defaultAddress.IsDefault = true;
+                var defaultAddress = addresses.FirstOrDefault(i => i.Id == user.AddressId);
+                if (defaultAddress != null)
+                {
+                    defaultAddress.IsDefault = true;
+                }
             }
 
             return View(addresses);

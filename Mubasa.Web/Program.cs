@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Mubasa.Web.Services.ThirdParties.EmailSender;
 using Mubasa.DataAccess.DbInitializer;
 using Mubasa.Models.ConfigModels;
+using Mubasa.Web.Installers;
 
 namespace Mubasa.Web
 {
@@ -18,78 +19,97 @@ namespace Mubasa.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddLocalization(options =>
-            {
-                options.ResourcesPath = "Resources";
-            });
-
-            builder.Services.AddControllersWithViews().AddViewLocalization();
-
-            builder.Services.Configure<RequestLocalizationOptions>(options =>
-            {
-                options.DefaultRequestCulture = new RequestCulture("vi-VN");
-
-                var cultures = new CultureInfo[]
-                {
-                    new CultureInfo("vi-VN"),
-                    new CultureInfo("en-US"),
-                };
-
-                options.SupportedCultures = cultures;
-                options.SupportedUICultures= cultures;
-            });
-
-            builder.Services.Configure<GiaoHangNhanhConfig>(
-                builder.Configuration.GetSection("GiaoHangNhanhConfig"));
-            builder.Services.Configure<ZaloPayConfig>(
-                builder.Configuration.GetSection("ZaloPayConfig"));
-            builder.Services.Configure<MoMoConfig>(
-                builder.Configuration.GetSection("MoMoConfig"));
-            builder.Services.Configure<MailGunConfig>(
-                builder.Configuration.GetSection("MailGunConfig"));
+            builder.Services.InstallServicesInAssembly(builder.Configuration);
 
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
-            builder.Services.AddDbContext<ApplicationDbContext>(
-                options => options.UseSqlServer(
-                    builder.Configuration.GetConnectionString("Default")));
+            #region CommentedServices
+            // Add services to the container.
+            //builder.Services.AddLocalization(options =>
+            //{
+            //    options.ResourcesPath = "Resources";
+            //});
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddDefaultTokenProviders()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultUI();
+            //builder.Services.AddControllersWithViews().AddViewLocalization();
 
-            builder.Services.AddAuthentication()
-                .AddFacebook(options =>
-                {
-                    options.AppId = builder.Configuration.GetSection("Facebook")["AppId"];
-                    options.AppSecret = builder.Configuration.GetSection("Facebook")["AppSecret"];
-                })
-                .AddGoogle(options =>
-                {
-                    options.ClientId = builder.Configuration.GetSection("Google")["ClientId"]; ;
-                    options.ClientSecret = builder.Configuration.GetSection("Google")["ClientSecret"]; ;
-                });
+            //builder.Services.Configure<RequestLocalizationOptions>(options =>
+            //{
+            //    options.DefaultRequestCulture = new RequestCulture("vi-VN");
 
-            builder.Services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = $"/Identity/Account/Login";
-                options.LogoutPath = $"/Identity/Account/Logout";
-                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
-            });
+            //    var cultures = new CultureInfo[]
+            //    {
+            //        new CultureInfo("vi-VN"),
+            //        new CultureInfo("en-US"),
+            //    };
 
-            builder.Services.AddDistributedMemoryCache();
-            builder.Services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromSeconds(1200);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
+            //    options.SupportedCultures = cultures;
+            //    options.SupportedUICultures= cultures;
+            //});
 
-            builder.Services.AddSingleton<IEmailSender, EmailSender>();
-            builder.Services.AddScoped<IDbInitializer, DbInitializer>();
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //builder.Services.Configure<GiaoHangNhanhConfig>(
+            //    builder.Configuration.GetSection("GiaoHangNhanhConfig"));
+            //builder.Services.Configure<ZaloPayConfig>(
+            //    builder.Configuration.GetSection("ZaloPayConfig"));
+            //builder.Services.Configure<MoMoConfig>(
+            //    builder.Configuration.GetSection("MoMoConfig"));
+            //builder.Services.Configure<MailGunConfig>(
+            //    builder.Configuration.GetSection("MailGunConfig"));
+
+            //builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            //{
+            //    string serverName = builder.Configuration["ServerName"] ?? "Database-Server";
+            //    string port = builder.Configuration["Port"] ?? "1433";
+            //    string databaseName = builder.Configuration["DbName"] ?? "Mubasa";
+            //    string userName = builder.Configuration["UserName"] ?? "SA";
+            //    string password = builder.Configuration["Password"] ?? "I1yPa$$w0rd";
+            //    string connectionString = $"Server={serverName},{port};Database={databaseName};User ID={userName};Password={password}";
+
+            //    Console.WriteLine($"---{connectionString}---");
+
+            //    options.UseSqlServer(connectionString);
+            //});
+
+            //builder.Services.AddDbContext<ApplicationDbContext>(
+            //    options => options.UseSqlServer(
+            //        builder.Configuration.GetConnectionString("Default")));
+
+            //builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            //    .AddDefaultTokenProviders()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>()
+            //    .AddDefaultUI();
+
+            //builder.Services.AddAuthentication()
+            //    .AddFacebook(options =>
+            //    {
+            //        options.AppId = builder.Configuration.GetSection("Facebook")["AppId"];
+            //        options.AppSecret = builder.Configuration.GetSection("Facebook")["AppSecret"];
+            //    })
+            //    .AddGoogle(options =>
+            //    {
+            //        options.ClientId = builder.Configuration.GetSection("Google")["ClientId"]; ;
+            //        options.ClientSecret = builder.Configuration.GetSection("Google")["ClientSecret"]; ;
+            //    });
+
+            //builder.Services.ConfigureApplicationCookie(options =>
+            //{
+            //    options.LoginPath = $"/Identity/Account/Login";
+            //    options.LogoutPath = $"/Identity/Account/Logout";
+            //    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            //});
+
+            //builder.Services.AddDistributedMemoryCache();
+            //builder.Services.AddSession(options =>
+            //{
+            //    options.IdleTimeout = TimeSpan.FromSeconds(1200);
+            //    options.Cookie.HttpOnly = true;
+            //    options.Cookie.IsEssential = true;
+            //});
+
+            //builder.Services.AddSingleton<IEmailSender, EmailSender>();
+            //builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+            //builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            #endregion
 
             var app = builder.Build();
 
