@@ -73,7 +73,7 @@ namespace Mubasa.Web.Areas.Customer.Controllers
 
             AddProductToCart(shoppingItem);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", new{ productId = shoppingItem.ProductId });
         }
 
         [Authorize]

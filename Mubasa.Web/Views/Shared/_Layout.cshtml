@@ -88,7 +88,7 @@
                 
                 </div>
 
-                <form asp-action="ListProducts" class="search-bar col-4" method="get">
+                <form asp-area="Customer" asp-controller="Home" asp-action="ListProducts" class="search-bar col-4" method="get">
                     <div class="text-area ps-3 py-1">
                         <input required id="input-search" name="search" type="search" placeholder="@HomeLocalizer["Search books, authors, ISBNs"]" />
                     </div>
