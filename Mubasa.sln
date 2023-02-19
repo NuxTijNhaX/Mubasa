@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mubasa.DataAccess", "Mubasa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mubasa.Utility", "Mubasa.Utility\Mubasa.Utility.csproj", "{DFE54BD7-E8CC-4181-BB3B-688CE90924AA}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{ABC0401B-C670-4799-B5E8-F7F0C0BF9B21}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{DFE54BD7-E8CC-4181-BB3B-688CE90924AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFE54BD7-E8CC-4181-BB3B-688CE90924AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFE54BD7-E8CC-4181-BB3B-688CE90924AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABC0401B-C670-4799-B5E8-F7F0C0BF9B21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABC0401B-C670-4799-B5E8-F7F0C0BF9B21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABC0401B-C670-4799-B5E8-F7F0C0BF9B21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABC0401B-C670-4799-B5E8-F7F0C0BF9B21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

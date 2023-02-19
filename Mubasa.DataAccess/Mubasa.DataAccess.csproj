@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Mubasa.Utility\Mubasa.Utility.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Database\" />
-  </ItemGroup>
-
 </Project>
