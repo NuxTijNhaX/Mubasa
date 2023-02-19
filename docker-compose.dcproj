@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>86828e76-2479-4084-9e45-b861178b7dbe</ProjectGuid>
+    <ProjectGuid>abc0401b-c670-4799-b5e8-f7f0c0bf9b21</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>mubasa.web</DockerServiceName>

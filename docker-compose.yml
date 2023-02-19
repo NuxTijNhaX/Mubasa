@@ -1,26 +1,8 @@
 version: '3.4'
 
 services:
-  mubasa.database:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    environment:
-      ACCEPT_EULA: "Y"
-      SA_PASSWORD: "I1yPa$$w0rd"
-      MSSQL_PID: Express
-    ports:
-      - "1433:1433"
   mubasa.web:
-    depends_on:
-      - mubasa.database
     image: ${DOCKER_REGISTRY-}mubasaweb
     build:
       context: .
       dockerfile: Mubasa.Web/Dockerfile
-    environment:
-      ServerName: "MubasaServer"
-      Port: "1433"
-      DbName: "Mubasa"
-      UserName: "SA"
-      Password: "I1yPa$$w0rd"
-    ports:
-      - "8080:80"

@@ -12,7 +12,6 @@ namespace Mubasa.DataAccess.Data
         }
 
         public DbSet<Address> Addresses { get; set; }
-        // public DbSet<DefaultAddress> DefaultAddresses { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Ward> Wards { get; set; }
@@ -27,7 +26,6 @@ namespace Mubasa.DataAccess.Data
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<ShoppingItem> ShoppingItems { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
-
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
     }
 }
