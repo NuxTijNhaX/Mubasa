@@ -35,6 +35,7 @@ namespace Mubasa.Web.Installers
             services.AddSingleton<IEmailSender, EmailSender>();
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
     }
 }

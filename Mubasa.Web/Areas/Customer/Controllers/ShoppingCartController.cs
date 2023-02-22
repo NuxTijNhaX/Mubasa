@@ -23,6 +23,7 @@ namespace Mubasa.Web.Areas.Customer.Controllers
         private readonly IOptions<GiaoHangNhanhConfig> _ghnConfig;
         private readonly IOptions<ZaloPayConfig> _zaloPayConfig;
         private readonly IOptions<MoMoConfig> _momoConfig;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public CheckoutVM CheckoutVM { get; set; }
 
@@ -31,13 +32,15 @@ namespace Mubasa.Web.Areas.Customer.Controllers
             IStringLocalizer<HomeController> localizer, 
             IOptions<GiaoHangNhanhConfig> ghnConfig,
             IOptions<ZaloPayConfig> zaloPayConfig,
-            IOptions<MoMoConfig> momoConfig)
+            IOptions<MoMoConfig> momoConfig,
+            IHttpContextAccessor httpContextAccessor)
         {
             _db = db;
             _localizer = localizer;
             _ghnConfig = ghnConfig;
             _zaloPayConfig = zaloPayConfig;
             _momoConfig = momoConfig;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: ShoppingCartController
@@ -245,6 +248,7 @@ namespace Mubasa.Web.Areas.Customer.Controllers
             }
             else
             {
+                string currentUrl = _httpContextAccessor.HttpContext.Request.Host.Value.ToString();
                 checkoutVM.OrderHeader.OrderStatus = SD.OrderWait4Pay;
 
                 if (paymentMethod.Code == SD.PayMethod_Zalo)
@@ -262,7 +266,8 @@ namespace Mubasa.Web.Areas.Customer.Controllers
                             checkoutVM.OrderHeader.Id,
                             paymentMethod.Code,
                             checkoutVM.OrderHeader.ApplicationUserId,
-                            checkoutVM.OrderHeader.GrandTotal
+                            checkoutVM.OrderHeader.GrandTotal,
+                            currentUrl
                         );
 
                     var resultCode = int.Parse(momoResponse["resultCode"]);
@@ -430,6 +435,7 @@ namespace Mubasa.Web.Areas.Customer.Controllers
         {
             var orderHeader = _db.OrderHeader.GetFirstOrDefault(i => i.Id == orderId);
             // orderHeader.PartnerPaymentId = paymentMethodName;
+            orderHeader.OrderStatus = SD.OrderPending;
             orderHeader.PaymentStatus = SD.PaymentPaid;
             orderHeader.PaymentedDate = DateTime.Now;
 
