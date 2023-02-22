@@ -36,11 +36,12 @@ namespace Mubasa.Web.Services.ThirdParties.PaymentGateway
             int orderId,
             string paymentName,
             string userId,
-            double amount)
+            double amount,
+            string url)
         {
             int amountInt = int.Parse(amount.ToString());
             string requestId = Guid.NewGuid().ToString();
-            string redirectUrl = $"https://localhost:7153/Customer/ShoppingCart/PaymentResult?orderId={orderId}&paymentName={paymentName}&userId={userId}";
+            string redirectUrl = $"https://{url}/Customer/ShoppingCart/PaymentResult?orderId={orderId}&paymentName={paymentName}&userId={userId}";
             string ipnUrl = "https://youtube.com";
             string requestType = "captureWallet";
             string lang = "vi";

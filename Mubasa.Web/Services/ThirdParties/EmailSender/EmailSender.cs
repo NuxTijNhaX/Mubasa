@@ -1,14 +1,4 @@
-﻿using MailKit.Security;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Extensions.Options;
-using MimeKit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Mubasa.Web.Services.ThirdParties.EmailSender
 {
